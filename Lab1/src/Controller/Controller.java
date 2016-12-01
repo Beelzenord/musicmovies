@@ -1,0 +1,84 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Controller;
+
+import Model.DBQueries;
+import Model.QueryExecutor;
+import Model.Artist;
+import java.sql.Date;
+import java.util.ArrayList;
+
+/**
+ *
+ * @author Niklas
+ */
+public class Controller {
+    private ArrayList<DBQueries> artists;
+    
+    public Controller(QueryExecutor exec) {
+        artists = new ArrayList();
+        artists.add(exec);
+    }
+    
+    public void artistsByName() {
+        String name = "james";
+        ArrayList<Artist> artister;
+        artister = artists.get(0).getArtistsByName(name);
+        for (Artist a : artister) {
+            System.out.println(a.toString());
+        }
+    }
+    
+    public void artistsByRating() {
+        String rating = "11";
+        ArrayList<Artist> artister;
+        artister = artists.get(0).getArtistsByRating(rating);
+        for (Artist a : artister) {
+            System.out.println(a.toString());
+        }
+    }
+
+    
+    public void insertAlbum() {
+        String title = "Illusion";
+        String genre = "rock";
+        String rating = "15";
+        Date rDate = new Date(97, 10, 23);
+        
+        artists.get(0).addNewAlbum(title, genre, rating, rDate);
+    }
+    
+    public void insertArtist() {
+        String fName = "Axel";
+        String lName = "Rose";
+        String rating = "11";
+        artists.get(0).addNewArtist(fName, lName, rating);
+    }
+    
+    public void insertArtistsAlbum() {
+        artists.get(0).addNewArtistsAlbum();
+    }
+}
+
+
+    //ALBUM
+    /*public void artistsByTitle() {
+        String title = "james";
+        ArrayList<Artist> artister;
+        artister = artists.get(0).getArtistsByTitle(title);
+        for (Artist a : artister) {
+            System.out.println(a.toString());
+        }
+    }
+    
+    public void artistsByGenre() {
+        String genre = "james";
+        ArrayList<Artist> artister;
+        artister = artists.get(0).getArtistsByGenre(genre);
+        for (Artist a : artister) {
+            System.out.println(a.toString());
+        }
+    }*/
