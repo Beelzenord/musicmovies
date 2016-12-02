@@ -21,6 +21,11 @@ public interface DBQueries {
     public ArrayList<Album> getAlbumsByRating(String rating);
     public ArrayList<Album> getAlbumsByArtist(String artist);
     
+    public ArrayList<Movie> getMoviesByTitle(String title);
+    public ArrayList<Movie> getMoviesByGenre(String genre);
+    public ArrayList<Movie> getMoviesByRating(String rating);
+    public ArrayList<Movie> getMoviesByDirector(String director);
+    
     public void addNewAlbum(String title, String genre, String rating, Date rDate);
     public void addNewArtist(String fName, String lName, String rating);
     public void addNewArtistsAlbum();

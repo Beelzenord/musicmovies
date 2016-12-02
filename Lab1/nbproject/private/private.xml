@@ -3,12 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Programs/Dropbox/kth/Databas/Lab1/src/SQLfiles/CreateMediaLibrary.sql</file>
-            <file>file:/D:/Programs/Dropbox/kth/Databas/Lab1/src/lab1/Lab1.java</file>
-            <file>file:/D:/Programs/Dropbox/kth/Databas/Lab1/src/Model/DBQueries.java</file>
-            <file>file:/D:/Programs/Dropbox/kth/Databas/Lab1/src/Model/T_Artist.java</file>
-            <file>file:/D:/Programs/Dropbox/kth/Databas/Lab1/CreateMediaLibrary.sql</file>
-            <file>file:/D:/Programs/Dropbox/kth/Databas/Lab1/src/Model/QueryExecutor.java</file>
+            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/Model/QueryExecutor.java</file>
+            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/Model/Album.java</file>
+            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/Model/DBQueries.java</file>
+            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/SQLfiles/CreateMediaLibrary.sql</file>
+            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/lab1/Lab1.java</file>
+            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/View/Test.java</file>
+            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/Controller/Controller.java</file>
+            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/Model/Artist.java</file>
         </group>
     </open-files>
 </project-private>

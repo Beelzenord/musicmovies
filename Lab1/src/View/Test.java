@@ -42,7 +42,7 @@ public class Test {
         Controller controller = new Controller(exec);
         
         /***** run queries here *****/
-        //controller.artistsByName();
+        controller.artistsByName();
         //controller.artistsByRating();
         //controller.insertAlbum();
         //controller.insertArtist();
@@ -50,7 +50,12 @@ public class Test {
         //controller.albumByTitle();
         //controller.albumByGenre();
         //controller.albumByRating();
-        //controller.albumByArtist();
+        controller.albumByArtist();
+        
+        //controller.movieByTitle();
+        //controller.movieByGenre();
+        //controller.movieByRating();
+        controller.movieByDirector();        
     }
     
 }

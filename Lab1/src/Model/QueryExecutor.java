@@ -31,6 +31,10 @@ public class QueryExecutor implements DBQueries {
     private PreparedStatement insertAlbum;
     private PreparedStatement insertArtist;
     private PreparedStatement insertArtistsAlbum;
+    private PreparedStatement getMovieByTitle;
+    private PreparedStatement getMovieByGenre;
+    private PreparedStatement getMovieByRating;
+    private PreparedStatement getMovieByDirector;
     private String raing;
     
     public QueryExecutor(Connection con) throws SQLException {
@@ -60,13 +64,14 @@ public class QueryExecutor implements DBQueries {
         // prepared statement for insert new artist
         String newArtist = "INSERT INTO T_Artist (fName, lName, rating)" 
             + "VALUES(?, ?, ?)";
+        //testa med IIN här och LIKE8not9
         //String newArtist = "NSERT INTO T_Artist (fName, lName, rating)" 
          //   + "VALUES(?, ?, ?) WHEN NOT EXISTS (SELECT fName FROM T_Artist" 
          //       + "WHERE fName = ?)";
-       // String newArtist = "BEGIN IF NOT EXISTS (SELECT * FROM T_Artist"
-       //         + "WHERE fName = ?)"
-       //         + "BEGIN INSERT INTO T_Artist (fName, lName, rating)" 
-       //         + "VALUES(?, ?, ?) END END";
+        //String newArtist = "BEGIN IF NOT EXISTS (SELECT * FROM T_Artist "
+        //        + "WHERE fName = ?) "
+        //        + "BEGIN INSERT INTO T_Artist (fName, lName, rating) " 
+        //        + "VALUES(?, ?, ?) END END";
         
                 
         insertArtist = con.prepareStatement(newArtist, Statement.RETURN_GENERATED_KEYS);
@@ -76,6 +81,7 @@ public class QueryExecutor implements DBQueries {
             + "VALUES(?, ?)";
         insertArtistsAlbum = con.prepareStatement(newArtistsAlbum);
         
+        /*** GET ALBUM BY.. ***/
         // prepared statement for getAlbumByTitle
         String byAlbumTitle = "SELECT * FROM T_Album WHERE title LIKE ?";
         getAlbumByTitle = con.prepareStatement(byAlbumTitle);
@@ -90,10 +96,30 @@ public class QueryExecutor implements DBQueries {
         
         // prepared statement for getAlbumByArtist
         String byAlbumArtist = "SELECT * FROM T_Album WHERE "
-                + "albumId = (SELECT albumId FROM T_ArtistsAlbum WHERE "
-                + "artistId = (SELECT artistId FROM T_Artist WHERE "
+                + "albumId IN (SELECT albumId FROM T_ArtistsAlbum WHERE "
+                + "artistId IN (SELECT artistId FROM T_Artist WHERE "
                 + "fName LIKE ?))";
         getAlbumByArtist = con.prepareStatement(byAlbumArtist);
+        
+        /*** GET MOVIE BY.. ***/
+        // prepared statement for getMovieByTitle
+        String byMovieTitle = "SELECT * FROM T_Movie WHERE title LIKE ?";
+        getMovieByTitle = con.prepareStatement(byMovieTitle);
+        
+        // prepared statement for getMovieByGenre
+        String byMovieGenre = "SELECT * FROM T_Movie WHERE genre LIKE ?";
+        getMovieByGenre = con.prepareStatement(byMovieGenre);
+        
+        // prepared statement for getMovieByRating
+        String byMovieRating = "SELECT * FROM T_Movie WHERE rating LIKE ?";
+        getMovieByRating = con.prepareStatement(byMovieRating);
+        
+        // prepared statement for getMovieByDirector
+        String byMovieDirector = "SELECT * FROM T_Movie WHERE "
+                + "movieId IN (SELECT movieId FROM T_MovieDirectory WHERE "
+                + "directorId IN (SELECT directorId FROM T_Director WHERE "
+                + "fName LIKE ?))";
+        getMovieByDirector = con.prepareStatement(byMovieDirector);
     }
     
     @Override
@@ -161,7 +187,7 @@ public class QueryExecutor implements DBQueries {
                 artistPKEY = rs.getInt(1);
         } catch (SQLException ex) {
             // show alert message and redo
-            System.out.println("This one Didn't select anything");
+            System.out.println("addNewArtist Didn't select anything");
         }
     }
 
@@ -179,7 +205,7 @@ public class QueryExecutor implements DBQueries {
 
 
     
-        //ALBUM
+    /*** GET ALBUM.. ***/
     @Override
     public ArrayList<Album> getAlbumsByTitle(String title) {
         try {
@@ -247,21 +273,74 @@ public class QueryExecutor implements DBQueries {
             return null;
         }
     }
-
-    /*@Override
-    public ArrayList<Artist> getArtistsByGenre(String genre) {
+    
+    /*** GET MOVIE.. ***/
+    @Override
+    public ArrayList<Movie> getMoviesByTitle(String title) {
         try {
-            getByGenre.setString(1, genre);
-            ResultSet rs = getByGenre.executeQuery();
-            ArrayList<Artist> tmp = new ArrayList();
+            getMovieByTitle.setString(1, "%" + title + "%");
+            ResultSet rs = getMovieByTitle.executeQuery();
+            ArrayList<Movie> tmp = new ArrayList();
             while (rs.next()) {
-                tmp.add(new Artist(rs.getString("fName"), rs.getString("lName"), rs.getString("rating")));
+                tmp.add(new Movie(rs.getString("title"), rs.getString("genre"), 
+                    rs.getString("rating"), rs.getDate("releaseDate")));
             }
             return tmp;
         } catch (SQLException ex) {
             System.out.println("Didn't select anything");
             return null;
         }
-    }*/
+    }
+    
+    @Override
+    public ArrayList<Movie> getMoviesByGenre(String genre) {
+        try {
+            getMovieByGenre.setString(1, "%" + genre + "%");
+            ResultSet rs = getMovieByGenre.executeQuery();
+            ArrayList<Movie> tmp = new ArrayList();
+            while (rs.next()) {
+                tmp.add(new Movie(rs.getString("title"), rs.getString("genre"), 
+                    rs.getString("rating"), rs.getDate("releaseDate")));
+            }
+            return tmp;
+        } catch (SQLException ex) {
+            System.out.println("Didn't select anything");
+            return null;
+        }
+    }
+    
+    @Override
+    public ArrayList<Movie> getMoviesByRating(String rating) {
+        try {
+            getMovieByRating.setString(1, "%" + rating + "%");
+            ResultSet rs = getMovieByRating.executeQuery();
+            ArrayList<Movie> tmp = new ArrayList();
+            while (rs.next()) {
+                tmp.add(new Movie(rs.getString("title"), rs.getString("genre"), 
+                    rs.getString("rating"), rs.getDate("releaseDate")));
+            }
+            return tmp;
+        } catch (SQLException ex) {
+            System.out.println("Didn't select anything");
+            return null;
+        }
+    }
+    
+    @Override
+    public ArrayList<Movie> getMoviesByDirector(String director) {
+        try {
+            getMovieByDirector.setString(1, "%" + director + "%");
+            ResultSet rs = getMovieByDirector.executeQuery();
+            ArrayList<Movie> tmp = new ArrayList();
+            while (rs.next()) {
+                tmp.add(new Movie(rs.getString("title"), rs.getString("genre"), 
+                    rs.getString("rating"), rs.getDate("releaseDate")));
+            }
+            return tmp;
+        } catch (SQLException ex) {
+            System.out.println("Didn't select anything");
+            return null;
+        }
+    }
     
 }
