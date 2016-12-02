@@ -42,11 +42,15 @@ public class Test {
         Controller controller = new Controller(exec);
         
         /***** run queries here *****/
-        /*controller.artistsByName();
-        controller.artistsByRating();
-        controller.insertAlbum();
-        controller.insertArtist();
-        controller.insertArtistsAlbum();*/
+        //controller.artistsByName();
+        //controller.artistsByRating();
+        //controller.insertAlbum();
+        //controller.insertArtist();
+        //controller.insertArtistsAlbum();
+        //controller.albumByTitle();
+        //controller.albumByGenre();
+        //controller.albumByRating();
+        //controller.albumByArtist();
     }
     
 }

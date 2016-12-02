@@ -5,6 +5,7 @@
  */
 package Controller;
 
+import Model.Album;
 import Model.DBQueries;
 import Model.QueryExecutor;
 import Model.Artist;
@@ -24,7 +25,7 @@ public class Controller {
     }
     
     public void artistsByName() {
-        String name = "james";
+        String name = "jame";
         ArrayList<Artist> artister;
         artister = artists.get(0).getArtistsByName(name);
         for (Artist a : artister) {
@@ -40,21 +41,61 @@ public class Controller {
             System.out.println(a.toString());
         }
     }
+    
+    public void albumByTitle() {
+        System.out.println("BY TITLE");
+        String title = "horse";
+        ArrayList<Album> artister;
+        artister = artists.get(0).getAlbumsByTitle(title);
+        for (Album a : artister) {
+            System.out.println(a.toString());
+        }
+    }
+    
+    public void albumByGenre() {
+        System.out.println("BY GENRE");
+        String genre = "punk";
+        ArrayList<Album> artister;
+        artister = artists.get(0).getAlbumsByGenre(genre);
+        for (Album a : artister) {
+            System.out.println(a.toString());
+        }
+    }
+    
+    public void albumByRating() {
+        System.out.println("BY RATING");
+        String rating = "15";
+        ArrayList<Album> artister;
+        artister = artists.get(0).getAlbumsByRating(rating);
+        for (Album a : artister) {
+            System.out.println(a.toString());
+        }
+    }
+    
+    public void albumByArtist() {
+        System.out.println("BY ARTIST");
+        String artist = "Me";
+        ArrayList<Album> artister;
+        artister = artists.get(0).getAlbumsByArtist(artist);
+        for (Album a : artister) {
+            System.out.println(a.toString());
+        }
+    }
 
     
     public void insertAlbum() {
-        String title = "Illusion";
-        String genre = "rock";
-        String rating = "15";
+        String title = "more";
+        String genre = "svett";
+        String rating = "2";
         Date rDate = new Date(97, 10, 23);
         
         artists.get(0).addNewAlbum(title, genre, rating, rDate);
     }
     
     public void insertArtist() {
-        String fName = "Axel";
-        String lName = "Rose";
-        String rating = "11";
+        String fName = "Mel";
+        String lName = "Tod";
+        String rating = "3";
         artists.get(0).addNewArtist(fName, lName, rating);
     }
     

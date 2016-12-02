@@ -21,10 +21,13 @@ public class QueryExecutor implements DBQueries {
     private Connection con;
     private int albumPKEY;
     private int artistPKEY;
-    private PreparedStatement getByName;
+    private PreparedStatement getArtistByName;
     private PreparedStatement getArtistByRating;
-    private PreparedStatement getByTitle;
-    private PreparedStatement getByGenre;
+    private PreparedStatement getArtistByGenre;
+    private PreparedStatement getAlbumByTitle;
+    private PreparedStatement getAlbumByGenre;
+    private PreparedStatement getAlbumByRating;
+    private PreparedStatement getAlbumByArtist;
     private PreparedStatement insertAlbum;
     private PreparedStatement insertArtist;
     private PreparedStatement insertArtistsAlbum;
@@ -33,11 +36,11 @@ public class QueryExecutor implements DBQueries {
     public QueryExecutor(Connection con) throws SQLException {
         this.con = con;
         
-        // prepared statement for getByArtistName
-        String byName = "SELECT * FROM T_Artist WHERE fName = ? OR lName = ?";
-        getByName = con.prepareStatement(byName);
+        // prepared statement for getArtistByName
+        String byArtistName = "SELECT * FROM T_Artist WHERE fName LIKE ? OR lName LIKE ?";
+        getArtistByName = con.prepareStatement(byArtistName);
         
-        // prepared statement for getByArtistRating
+        // prepared statement for getArtistByRating
         String byArtistRating = "SELECT * FROM T_Artist WHERE rating = ?";
         getArtistByRating = con.prepareStatement(byArtistRating);
         
@@ -57,26 +60,55 @@ public class QueryExecutor implements DBQueries {
         // prepared statement for insert new artist
         String newArtist = "INSERT INTO T_Artist (fName, lName, rating)" 
             + "VALUES(?, ?, ?)";
+        //String newArtist = "NSERT INTO T_Artist (fName, lName, rating)" 
+         //   + "VALUES(?, ?, ?) WHEN NOT EXISTS (SELECT fName FROM T_Artist" 
+         //       + "WHERE fName = ?)";
+       // String newArtist = "BEGIN IF NOT EXISTS (SELECT * FROM T_Artist"
+       //         + "WHERE fName = ?)"
+       //         + "BEGIN INSERT INTO T_Artist (fName, lName, rating)" 
+       //         + "VALUES(?, ?, ?) END END";
+        
+                
         insertArtist = con.prepareStatement(newArtist, Statement.RETURN_GENERATED_KEYS);
         
         // preparted statement for insert new artistsAlbum
         String newArtistsAlbum = "INSERT INTO T_ArtistsAlbum (artistId, albumId)" 
             + "VALUES(?, ?)";
         insertArtistsAlbum = con.prepareStatement(newArtistsAlbum);
+        
+        // prepared statement for getAlbumByTitle
+        String byAlbumTitle = "SELECT * FROM T_Album WHERE title LIKE ?";
+        getAlbumByTitle = con.prepareStatement(byAlbumTitle);
+        
+        // prepared statement for getAlbumByGenre
+        String byAlbumGenre = "SELECT * FROM T_Album WHERE genre LIKE ?";
+        getAlbumByGenre = con.prepareStatement(byAlbumGenre);
+        
+        // prepared statement for getAlbumByRating
+        String byAlbumRating = "SELECT * FROM T_Album WHERE rating LIKE ?";
+        getAlbumByRating = con.prepareStatement(byAlbumRating);
+        
+        // prepared statement for getAlbumByArtist
+        String byAlbumArtist = "SELECT * FROM T_Album WHERE "
+                + "albumId = (SELECT albumId FROM T_ArtistsAlbum WHERE "
+                + "artistId = (SELECT artistId FROM T_Artist WHERE "
+                + "fName LIKE ?))";
+        getAlbumByArtist = con.prepareStatement(byAlbumArtist);
     }
     
     @Override
     public ArrayList<Artist> getArtistsByName(String name) {
         try {
-            getByName.setString(1, name);
-            getByName.setString(2, name);
-            ResultSet rs = getByName.executeQuery();
+            getArtistByName.setString(1, "%" + name + "%");
+            getArtistByName.setString(2, "%" + name + "%");
+            ResultSet rs = getArtistByName.executeQuery();
             ArrayList<Artist> tmp = new ArrayList();
             while (rs.next()) {
                 tmp.add(new Artist(rs.getString("fName"), rs.getString("lName"), rs.getString("rating")));
             }
             return tmp;
         } catch (SQLException ex) {
+            System.out.println("Didn't select anything");
             return null;
         }
     }
@@ -92,6 +124,7 @@ public class QueryExecutor implements DBQueries {
             }
             return tmp;
         } catch (SQLException ex) {
+            System.out.println("Didn't select anything");
             return null;
         }
     }
@@ -110,21 +143,25 @@ public class QueryExecutor implements DBQueries {
                 albumPKEY = rs.getInt(1);
         } catch (SQLException ex) {
             // show alert message and redo
+            System.out.println("Didn't select anything");
         }
     }
 
     @Override
     public void addNewArtist(String fName, String lName, String rating) {
         try {
+            //insertArtist.setString(1, fName);
             insertArtist.setString(1, fName);
             insertArtist.setString(2, lName);
             insertArtist.setString(3, rating);
+            
             insertArtist.executeUpdate();
             ResultSet rs = insertArtist.getGeneratedKeys();
             while (rs.next())
                 artistPKEY = rs.getInt(1);
         } catch (SQLException ex) {
             // show alert message and redo
+            System.out.println("This one Didn't select anything");
         }
     }
 
@@ -132,34 +169,86 @@ public class QueryExecutor implements DBQueries {
     public void addNewArtistsAlbum() {
         try {
             insertArtistsAlbum.setInt(1, artistPKEY);
-            System.out.println("1");
             insertArtistsAlbum.setInt(2, albumPKEY);
-            System.out.println("2");
             insertArtistsAlbum.executeUpdate();
         } catch (SQLException ex) {
             // show alert message and redo
-            System.out.println("ADDNEWARTISTSALBUM REKT");
+            System.out.println("Didn't select anything");
         }
     }
 
 
     
         //ALBUM
-    /*@Override
-    public ArrayList<Artist> getArtistsByTitle(String title) {
+    @Override
+    public ArrayList<Album> getAlbumsByTitle(String title) {
         try {
-            getByTitle.setString(1, title);
-            ResultSet rs = getByTitle.executeQuery();
-            ArrayList<Artist> tmp = new ArrayList();
+            getAlbumByTitle.setString(1, "%" + title + "%");
+            ResultSet rs = getAlbumByTitle.executeQuery();
+            ArrayList<Album> tmp = new ArrayList();
             while (rs.next()) {
-                tmp.add(new Artist(rs.getString("fName"), rs.getString("lName"), rs.getString("rating")));
+                tmp.add(new Album(rs.getString("title"), rs.getString("genre"), 
+                    rs.getString("rating"), rs.getDate("releaseDate")));
             }
             return tmp;
         } catch (SQLException ex) {
+            System.out.println("Didn't select anything");
             return null;
         }
-
+    }
+    
     @Override
+    public ArrayList<Album> getAlbumsByGenre(String genre) {
+        try {
+            getAlbumByGenre.setString(1, "%" + genre + "%");
+            ResultSet rs = getAlbumByGenre.executeQuery();
+            ArrayList<Album> tmp = new ArrayList();
+            while (rs.next()) {
+                tmp.add(new Album(rs.getString("title"), rs.getString("genre"), 
+                    rs.getString("rating"), rs.getDate("releaseDate")));
+            }
+            return tmp;
+        } catch (SQLException ex) {
+            System.out.println("Didn't select anything");
+            return null;
+        }
+    }
+    
+    @Override
+    public ArrayList<Album> getAlbumsByRating(String rating) {
+        try {
+            getAlbumByRating.setString(1, "%" + rating + "%");
+            ResultSet rs = getAlbumByRating.executeQuery();
+            ArrayList<Album> tmp = new ArrayList();
+            while (rs.next()) {
+                tmp.add(new Album(rs.getString("title"), rs.getString("genre"), 
+                    rs.getString("rating"), rs.getDate("releaseDate")));
+            }
+            return tmp;
+        } catch (SQLException ex) {
+            System.out.println("Didn't select anything");
+            return null;
+        }
+    }
+    
+    @Override
+    public ArrayList<Album> getAlbumsByArtist(String artist) {
+        try {
+            getAlbumByArtist.setString(1, "%" + artist + "%");
+            ResultSet rs = getAlbumByArtist.executeQuery();
+            ArrayList<Album> tmp = new ArrayList();
+            while (rs.next()) {
+                tmp.add(new Album(rs.getString("title"), rs.getString("genre"), 
+                    rs.getString("rating"), rs.getDate("releaseDate")));
+            }
+            return tmp;
+        } catch (SQLException ex) {
+            System.out.println("Didn't select anything");
+            return null;
+        }
+    }
+
+    /*@Override
     public ArrayList<Artist> getArtistsByGenre(String genre) {
         try {
             getByGenre.setString(1, genre);
@@ -170,6 +259,7 @@ public class QueryExecutor implements DBQueries {
             }
             return tmp;
         } catch (SQLException ex) {
+            System.out.println("Didn't select anything");
             return null;
         }
     }*/
