@@ -1,5 +1,6 @@
 package View;
 
+import java.util.ArrayList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
@@ -9,7 +10,13 @@ public class CenterTableView extends TableView{
     private TableColumn movie;
     private TableColumn director;
     private TableColumn rating;
-    public CenterTableView(){
+    ArrayList<TableColumn> tablecolumn;
+    public CenterTableView(Object o) {
+        //ArrayList<String> attributeNames = o.getClass();
+        
+        
+        
+        
         album = new TableColumn("album");
         album.setMinWidth(100);
         artist = new TableColumn("artist");

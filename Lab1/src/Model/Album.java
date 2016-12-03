@@ -6,6 +6,7 @@
 package Model;
 
 import java.sql.Date;
+import java.util.ArrayList;
 
 /**
  *
@@ -18,6 +19,13 @@ public class Album {
     private String rating;
     private Date releaseDate;
 
+    public Album(int albumId, String title, String genre, String rating, Date releaseDate) {
+        this.albumId = albumId;
+        this.title = title;
+        this.genre = genre;
+        this.rating = rating;
+        this.releaseDate = releaseDate;
+    }
     public Album(String title, String genre, String rating, Date releaseDate) {
         this.title = title;
         this.genre = genre;
@@ -63,6 +71,15 @@ public class Album {
 
     public void setReleaseDate(Date releaseDate) {
         this.releaseDate = releaseDate;
+    }
+    
+    public ArrayList<String> getAttributeNames() {
+        ArrayList<String> tmp = new ArrayList();
+        tmp.add("title");
+        tmp.add("genre");
+        tmp.add("rating");
+        tmp.add("releaseDate");
+        return tmp;
     }
 
     @Override

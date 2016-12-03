@@ -10,8 +10,10 @@ import Model.DBQueries;
 import Model.QueryExecutor;
 import Model.Artist;
 import Model.Director;
+import Model.GetAlbums;
 import Model.Model;
 import Model.Movie;
+import Model.QueryGenerator;
 import View.View;
 import java.sql.Connection;
 import java.sql.Date;
@@ -23,14 +25,18 @@ import javafx.application.Platform;
  *
  * @author Niklas
  */
-public class Controller {
+public class Controller implements QueryGenerator {
     private ArrayList<DBQueries> artists;
+    private ArrayList<QueryGenerator> theQueries;
     private Model model;
     private View view;
     private QueryExecutor exec;
+    private int index;
     
     public Controller(Model model, View view) {
         artists = new ArrayList();
+        theQueries = new ArrayList();
+        index = 0;
         this.model = model;
         this.view = view;
         view.ControllerHook(this);
@@ -38,11 +44,14 @@ public class Controller {
     
     public void systemAccess() throws SQLException {
         exec = new QueryExecutor(model.getMyConn());
+        theQueries.add(new GetAlbums(model.getMyConn()));
         artists.add(exec);
+        insertAlbum();
     }
     
     public void handleButton(){
-        System.out.println("Confirm");
+        //test();
+        System.out.println("Conasdasdsafirm");
     }
     
     public void transfer(String userName, String passWord) throws SQLException{
@@ -57,6 +66,77 @@ public class Controller {
     
     public void confirm(){
         System.out.println("confirm");
+    }
+    
+    
+    
+    
+    public void test() {
+        ArrayList<Album> asd = getByTitle("da");
+        System.out.println(asd.get(0).toString());
+    }
+    
+    
+    @Override
+    public ArrayList getByTitle(String title) {
+        return theQueries.get(index).getByTitle(title);
+    }
+    
+    @Override
+    public ArrayList getByRating(String rating) {
+        return theQueries.get(index).getByRating(rating);
+    }
+
+    @Override
+    public ArrayList getByGenre(String genre) {
+        return theQueries.get(index).getByGenre(genre);
+    }
+
+    @Override
+    public ArrayList getByNationality(String nationality) {
+        return theQueries.get(index).getByNationality(nationality);
+    }
+
+    @Override
+    public ArrayList getByName(String name) {
+        return theQueries.get(index).getByName(name);
+    }
+    
+    @Override
+    public ArrayList getByArtist(String artist) {
+        return theQueries.get(index).getByArtist(artist);
+    }
+
+    @Override
+    public ArrayList getByAlbum(String album) {
+        return theQueries.get(index).getByAlbum(album);
+    }
+
+    @Override
+    public ArrayList getByDirector(String director) {
+        return theQueries.get(index).getByDirector(director);
+    }
+
+    @Override
+    public ArrayList getByMovie(String movie) {
+        return theQueries.get(index).getByMovie(movie);
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    public void exitProgram() {
+        System.out.println("exitlul");
     }
     
     /*** GET ARTIST ***/

@@ -1,7 +1,6 @@
 
 package View;
 import Controller.Controller;
-import Model.QueryExecutor;
 import Model.Model;
 
 import java.sql.SQLException;
@@ -119,7 +118,8 @@ public class View {
     }
     
     public void hide() {
-        stage2.close();
+        //stage2.setScene(scene);
+        //stage2.close();
     }
     
     public void checkForButtons(){

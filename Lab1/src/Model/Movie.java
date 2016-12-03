@@ -18,7 +18,8 @@ public class Movie {
     private String rating;
     private Date releaseDate;
 
-    public Movie(String title, String genre, String rating, Date releaseDate) {
+    public Movie(int albumId, String title, String genre, String rating, Date releaseDate) {
+        this.albumId = albumId;
         this.title = title;
         this.genre = genre;
         this.rating = rating;
