@@ -4,6 +4,9 @@
  * and open the template in the editor.
  */
 package View;
+import Controller.Controller;
+import Model.QueryExecutor;
+
 
 import Controller.Controller;
 import Model.QueryExecutor;
@@ -39,7 +42,7 @@ public class Test {
         }
         
         exec = new QueryExecutor(con);
-        Controller controller = new Controller(exec);
+        //Controller controller = new Controller(exec);
         
         /***** RUN QUERIES HERE *****/
         //controller.artistsByName(); // with thread

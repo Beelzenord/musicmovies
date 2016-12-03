@@ -18,7 +18,7 @@ public class Lab1 {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws Exception {
+    /*public static void main(String[] args) throws Exception {
         Test test = new Test();
-    }    
+    } */   
 }

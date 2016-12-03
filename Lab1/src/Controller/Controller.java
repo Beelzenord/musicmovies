@@ -1,8 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
 package Controller;
 
 import Model.Album;
@@ -10,8 +10,12 @@ import Model.DBQueries;
 import Model.QueryExecutor;
 import Model.Artist;
 import Model.Director;
+import Model.Model;
 import Model.Movie;
+import View.View;
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import javafx.application.Platform;
 
@@ -21,10 +25,38 @@ import javafx.application.Platform;
  */
 public class Controller {
     private ArrayList<DBQueries> artists;
+    private Model model;
+    private View view;
+    private QueryExecutor exec;
     
-    public Controller(QueryExecutor exec) {
+    public Controller(Model model, View view) {
         artists = new ArrayList();
+        this.model = model;
+        this.view = view;
+        view.ControllerHook(this);
+    }
+    
+    public void systemAccess() throws SQLException {
+        exec = new QueryExecutor(model.getMyConn());
         artists.add(exec);
+    }
+    
+    public void handleButton(){
+        System.out.println("Confirm");
+    }
+    
+    public void transfer(String userName, String passWord) throws SQLException{
+        System.out.println("fasdfa<");
+        if (model.validateUserIdentity(userName,passWord)) {
+            systemAccess();
+            // new view of everything
+            view.hide();
+            artistsByName();
+        }
+    }
+    
+    public void confirm(){
+        System.out.println("confirm");
     }
     
     /*** GET ARTIST ***/
@@ -36,18 +68,17 @@ public class Controller {
                 ArrayList<Artist> tmp;
                 tmp = artists.get(0).getArtistsByName(name);
                 Platform.runLater(
-                    new Runnable() {
-                        public void run() {
-                            for (Artist a : tmp) {
-                                System.out.println(a.toString());
+                        new Runnable() {
+                            public void run() {
+                                for (Artist a : tmp) {
+                                    System.out.println(a.toString());
+                                }
                             }
-                        }
-                    });
-                System.out.println("sdf");
+                        });
             }
         }.start();
     }
- 
+    
     public void artistsByRating() {
         System.out.println("\nartistsByRating");
         String rating = "11";
@@ -160,7 +191,7 @@ public class Controller {
             System.out.println(a.toString());
         }
     }
-
+    
     /*** ADD ALBUM AND ARTIST ***/
     public void insertAlbum() {
         System.out.println("\ninsertAlbum");

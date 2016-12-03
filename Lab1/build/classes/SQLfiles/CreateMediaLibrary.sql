@@ -8,9 +8,9 @@
  * Created: Nov 30, 2016
  */
 
-CREATE DATABASE IF NOT EXISTS MediaLibrary;
+CREATE DATABASE IF NOT EXISTS kTunes;
 
-USE MediaLibrary;
+USE kTunes;
 
 
 CREATE TABLE IF NOT EXISTS T_Album (
@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS T_Artist(
 artistId INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
 name VARCHAR(40),
 rating VARCHAR(40),
+nationality VARCHAR(40)
 );
 
 
@@ -42,12 +43,13 @@ CREATE TABLE IF NOT EXISTS T_Director(
 directorId INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
 name VARCHAR(40),
 rating VARCHAR(40),
+nationality VARCHAR(40)
 );
 
 
 CREATE TABLE IF NOT EXISTS T_User (
 userId INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
-name VARCHAR(40),
+name VARCHAR(40)
 );
 
 
@@ -62,7 +64,7 @@ REFERENCES T_Album (albumId) ON DELETE CASCADE
 );
 
 
-CREATE TABLE IF NOT EXISTS T_MovieDirectory(
+CREATE TABLE IF NOT EXISTS T_MovieDirectory (
 movieId INT NOT NULL,
 directorId INT NOT NULL,
 CONSTRAINT T_MovieDirectory_directorId_movieId_pk PRIMARY KEY(directorId,movieId),
@@ -76,8 +78,8 @@ REFERENCES T_Director(directorId) ON DELETE CASCADE
 CREATE TABLE IF NOT EXISTS T_AlbumReview (
 albumId INT NOT NULL,
 userId INT NOT NULL,
-review VARCHAR(1000), 
 rating VARCHAR(1), 
+review VARCHAR(600), 
 CONSTRAINT T_AlbumReview_albumId_userId_pk PRIMARY KEY (albumId, userId), 
 CONSTRAINT T_AlbumReview_albumId_fk FOREIGN KEY (albumId)
 REFERENCES T_Album (albumId) ON DELETE CASCADE, 
@@ -89,8 +91,8 @@ REFERENCES T_User (userId) ON DELETE CASCADE
 CREATE TABLE IF NOT EXISTS T_MovieReview(
 movieId INT NOT NULL,
 userId INT NOT NULL,
-review VARCHAR(1000),
 rating VARCHAR(1),
+review VARCHAR(600),
 CONSTRAINT T_MovieReview_movieId_userId_pk PRIMARY KEY(movieId,userId),
 CONSTRAINT T_MovieReview_moviId_fk FOREIGN KEY(movieId) 
 REFERENCES T_Movie(movieId) ON DELETE CASCADE,
@@ -102,8 +104,8 @@ REFERENCES T_User(userId) ON DELETE CASCADE
 CREATE TABLE IF NOT EXISTS T_ArtistReview (
 artistId INT NOT NULL,
 userId INT NOT NULL,
-review VARCHAR(1000), 
 rating VARCHAR(1), 
+review VARCHAR(600), 
 CONSTRAINT T_ArtistReview_artistId_userId_pk PRIMARY KEY (artistId, userId), 
 CONSTRAINT T_Artist_artistId_fk FOREIGN KEY (artistId)
 REFERENCES T_Artist (artistId) ON DELETE CASCADE, 
@@ -115,8 +117,8 @@ REFERENCES T_User (userId) ON DELETE CASCADE
 CREATE TABLE IF NOT EXISTS T_DirectorReview (
 directorId INT NOT NULL,
 userId INT NOT NULL,
-review VARCHAR(1000), 
 rating VARCHAR(1), 
+review VARCHAR(600), 
 CONSTRAINT T_DirectorReview_directorId_userId_pk PRIMARY KEY (directorId, userId), 
 CONSTRAINT T_DirectorReview_directorId_fk FOREIGN KEY (directorId)
 REFERENCES T_Director (directorId) ON DELETE CASCADE, 
@@ -167,19 +169,3 @@ REFERENCES T_User (userId) ON DELETE CASCADE
 );
 
 
-CREATE TABLE IF NOT EXISTS T_DirectorsNationality (
-directorId INT NOT NULL,
-nationality VARCHAR(40), 
-CONSTRAINT T_DirectorsNationality_directorId_pk PRIMARY KEY (directorId), 
-CONSTRAINT T_DirectorsNationality_directorId_fk FOREIGN KEY (directorId)
-REFERENCES T_Director (directorId) ON DELETE CASCADE 
-);
-
-
-CREATE TABLE IF NOT EXISTS T_ArtistsNationality (
-artistId INT NOT NULL,
-nationality VARCHAR(40), 
-CONSTRAINT T_ArtiststNationality_artistId_pk PRIMARY KEY (artistId), 
-CONSTRAINT T_ArtiststNationality_artistId_fk FOREIGN KEY (artistId)
-REFERENCES T_Artist (artistId) ON DELETE CASCADE
-);

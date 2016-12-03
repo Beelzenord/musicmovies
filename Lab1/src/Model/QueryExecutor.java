@@ -50,7 +50,10 @@ public class QueryExecutor implements DBQueries {
     
     public QueryExecutor(Connection con) throws SQLException {
         this.con = con;
-        
+        initPrimaryStatements();
+    }
+    
+    private void initPrimaryStatements() throws SQLException {
         /*** GET ARTIST ***/
         // prepared statement for getArtistByName
         String byArtistName = "SELECT * FROM T_Artist WHERE name LIKE ?";
