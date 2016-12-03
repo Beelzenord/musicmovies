@@ -41,21 +41,31 @@ public class Test {
         exec = new QueryExecutor(con);
         Controller controller = new Controller(exec);
         
-        /***** run queries here *****/
-        controller.artistsByName();
+        /***** RUN QUERIES HERE *****/
+        //controller.artistsByName(); // with thread
         //controller.artistsByRating();
+        
         //controller.insertAlbum();
         //controller.insertArtist();
-        //controller.insertArtistsAlbum();
-        //controller.albumByTitle();
-        //controller.albumByGenre();
-        //controller.albumByRating();
+        //controller.insertAlbumDirectory();
+        
+        /*controller.albumByTitle();
+        controller.albumByGenre();
+        controller.albumByRating();
         controller.albumByArtist();
         
-        //controller.movieByTitle();
-        //controller.movieByGenre();
-        //controller.movieByRating();
-        controller.movieByDirector();        
+        controller.directorsByName();
+        controller.directorsByRating();
+        
+        controller.insertMovie();
+        controller.insertDirector();
+        controller.insertMovieDirectory();
+        
+        controller.movieByTitle();
+        controller.movieByGenre();
+        controller.movieByRating();
+        controller.movieByDirector();*/  
+        con.close();
     }
     
 }

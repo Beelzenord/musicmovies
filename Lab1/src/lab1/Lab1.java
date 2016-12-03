@@ -6,6 +6,8 @@
 package lab1;
 
 import View.Test;
+import javafx.application.Application;
+import javafx.application.Platform;
 
 /**
  *
@@ -18,6 +20,5 @@ public class Lab1 {
      */
     public static void main(String[] args) throws Exception {
         Test test = new Test();
-    }
-    
+    }    
 }

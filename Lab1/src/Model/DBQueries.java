@@ -15,18 +15,27 @@ import java.util.ArrayList;
 public interface DBQueries {
     public ArrayList<Artist> getArtistsByName(String name);
     public ArrayList<Artist> getArtistsByRating(String rating);
+    public ArrayList<Artist> getArtistsByAll(String name, String rating);
     
     public ArrayList<Album> getAlbumsByTitle(String title);
     public ArrayList<Album> getAlbumsByGenre(String genre);
     public ArrayList<Album> getAlbumsByRating(String rating);
     public ArrayList<Album> getAlbumsByArtist(String artist);
+    public ArrayList<Album> getAlbumsByAll(String title, String genre, String rating, Date rDate);
     
     public ArrayList<Movie> getMoviesByTitle(String title);
     public ArrayList<Movie> getMoviesByGenre(String genre);
     public ArrayList<Movie> getMoviesByRating(String rating);
     public ArrayList<Movie> getMoviesByDirector(String director);
     
+    public ArrayList<Director> getDirectorsByName(String name);
+    public ArrayList<Director> getDirectorsByRating(String rating);
+    
     public void addNewAlbum(String title, String genre, String rating, Date rDate);
-    public void addNewArtist(String fName, String lName, String rating);
-    public void addNewArtistsAlbum();
+    public void addNewArtist(String name, String rating);
+    public void addNewAlbumDirectory();
+    
+    public void addNewMovie(String title, String genre, String rating, Date rDate);
+    public void addNewDirector(String name, String rating);
+    public void addNewMovieDirectory();
 }

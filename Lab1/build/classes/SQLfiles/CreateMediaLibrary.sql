@@ -33,34 +33,31 @@ releaseDate DATE
 
 CREATE TABLE IF NOT EXISTS T_Artist(
 artistId INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
-fName VARCHAR(40),
-lName VARCHAR(40),
-rating VARCHAR(40)
+name VARCHAR(40),
+rating VARCHAR(40),
 );
 
 
 CREATE TABLE IF NOT EXISTS T_Director(
 directorId INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
-fName VARCHAR(40),
-lName VARCHAR(40),
-rating VARCHAR(40)
+name VARCHAR(40),
+rating VARCHAR(40),
 );
 
 
 CREATE TABLE IF NOT EXISTS T_User (
 userId INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
-fName VARCHAR(40),
-lName VARCHAR(40)
+name VARCHAR(40),
 );
 
 
-CREATE TABLE IF NOT EXISTS T_ArtistsAlbum (
+CREATE TABLE IF NOT EXISTS T_AlbumDirectory (
 artistId INT NOT NULL,
 albumId INT NOT NULL,
-CONSTRAINT T_ArtistsAlbum_artistId_albumId_pk PRIMARY KEY (artistId, albumId), 
-CONSTRAINT T_ArtistsAlbum_artisttId_fk FOREIGN KEY (artistId)
+CONSTRAINT T_AlbumDirectory_artistId_albumId_pk PRIMARY KEY (artistId, albumId), 
+CONSTRAINT T_AlbumDirectory_artisttId_fk FOREIGN KEY (artistId)
 REFERENCES T_Artist (artistId) ON DELETE CASCADE, 
-CONSTRAINT T_ArtistsAlbum_albumId_fk FOREIGN KEY (albumId)
+CONSTRAINT T_AlbumDirectory_albumId_fk FOREIGN KEY (albumId)
 REFERENCES T_Album (albumId) ON DELETE CASCADE
 );
 

@@ -20,13 +20,16 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 public class CenterTableView extends TableView implements Observer {
     private CollectionOfBooks library;
+    //here
+    private ArrayList<ObservableList> asd;
     private ObservableList<Book> observBooks;
     private TableColumn title;
     private TableColumn isbn;
     private TableColumn edition;   
     private TableColumn price;        
     private TableColumn author;
-    
+    //here
+    private ArrayList<TableColumn> qwe;
     
     public CenterTableView (CollectionOfBooks library) {
         this.library = library;

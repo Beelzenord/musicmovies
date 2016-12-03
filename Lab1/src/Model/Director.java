@@ -15,10 +15,9 @@ public class Director {
     private String rating;
     private String nationality;
 
-    public Director(String name, String rating, String nationality) {
+    public Director(String name, String rating) {
         this.name = name;
         this.rating = rating;
-        this.nationality = nationality;
     }
 
     public int getDirectorId() {

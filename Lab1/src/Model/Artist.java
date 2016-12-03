@@ -13,36 +13,25 @@ import java.sql.Date;
  */
 public class Artist {
     private int artistId;
-    private String fName;
-    private String lName;
+    private String name;
     private String rating;
-    private Date releaseDate;
     
-    public Artist(String fName, String lName, String rating) {
-        this.fName = fName;
-        this.lName = lName;
+    public Artist(String name, String rating) {
+        this.name = name;
         this.rating = rating;
     }
 
     @Override
     public String toString() {
-        return "Artist{" + "fName=" + fName + ", lName=" + lName + ", rating=" + rating + '}';
+        return "Artist{" + "name=" + name + ", rating=" + rating + '}';
     }
 
-    public String getfName() {
-        return fName;
+    public String getName() {
+        return name;
     }
 
-    public void setfName(String fName) {
-        this.fName = fName;
-    }
-
-    public String getlName() {
-        return lName;
-    }
-
-    public void setlName(String lName) {
-        this.lName = lName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getRating() {
@@ -51,14 +40,6 @@ public class Artist {
 
     public void setRating(String rating) {
         this.rating = rating;
-    }
-
-    public Date getReleaseDate() {
-        return releaseDate;
-    }
-
-    public void setReleaseDate(Date releaseDate) {
-        this.releaseDate = releaseDate;
     }
 
 }
