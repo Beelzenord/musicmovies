@@ -56,11 +56,10 @@ public class Artist {
     public void setNationality(String nationality) {
         this.nationality = nationality;
     }
-    
-    
+
     @Override
     public String toString() {
-        return "Artist{" + "name=" + name + ", rating=" + rating + '}';
+        return "Artist{" + "name=" + name + ", rating=" + rating + ", nationality=" + nationality + '}';
     }
     
     public ArrayList<String> getAttributeNames() {

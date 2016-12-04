@@ -6,10 +6,13 @@
 package Model;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -17,133 +20,71 @@ import java.util.ArrayList;
  */
 public class GetDirectors implements QueryGenerator {
     private Connection con;
-    private PreparedStatement getDirectorByName;
-    private PreparedStatement getDirectorByRating;    
-    private PreparedStatement getDirectorByNationality;    
-    private PreparedStatement getDirectorByMovie;    
-
+    private PreparedStatement searchPrep;
+    private PreparedStatement searchByMoviePrep;
+    
     public GetDirectors(Connection con) {
         this.con = con;
-        initPreparedStatements();
     }
     
-    private void initPreparedStatements() {
-        try {
-        // prepared statement for getDirectorByName
-        String byDirectorName = "SELECT * FROM T_Director WHERE name LIKE ?";
-        getDirectorByName = con.prepareStatement(byDirectorName);
-        
-        // prepared statement for getDirectorByRating
-        String byDirectorRating = "SELECT * FROM T_Director WHERE rating = ?";
-        getDirectorByRating = con.prepareStatement(byDirectorRating);
-        
-        // prepared statement for getDirectorByNationality
-        String byDirectorNationality = "SELECT * FROM T_Director WHERE nationality = ?";
-        getDirectorByNationality = con.prepareStatement(byDirectorNationality);
-        
-        // prepared statement for getMovieByDirector
-        String byDirectorMovie = "SELECT * FROM T_Director WHERE "
-                + "directorId IN (SELECT directorId FROM T_MovieDirectory WHERE "
-                + "movieId IN (SELECT movieId FROM T_Movie WHERE "
-                + "title LIKE ?))";
-        getDirectorByMovie = con.prepareStatement(byDirectorMovie);
-        
-        } catch (SQLException ex) {
-            System.out.println("what to do here? Prepared "
-                    + "statements of getAlbum crashed");
-        }
+    private void createSearchPrep(String searchBy) throws SQLException {
+        String prepState;
+        if (searchBy.equals("name"))
+            prepState = "SELECT * FROM T_Director WHERE name LIKE ?";
+        else if (searchBy.equals("rating"))
+            prepState = "SELECT * FROM T_Director WHERE rating LIKE ?";
+        else
+            prepState = "SELECT * FROM T_Director WHERE nationality LIKE ?";
+        searchPrep = con.prepareStatement(prepState);
     }
-
-    @Override
-    public ArrayList getByTitle(String title) {
-        return null;
+    
+    private void createSearchByMoviePrep() throws SQLException {
+        String byDirector = "SELECT * FROM T_Movie WHERE "
+                + "movieId IN (SELECT movieId FROM T_MovieDirectory WHERE "
+                + "directorId IN (SELECT directorId FROM T_Director WHERE "
+                + "name LIKE ?))";
+        searchByMoviePrep = con.prepareStatement(byDirector);
     }
-
+    
+    
     @Override
-    public ArrayList getByRating(String rating) {
-        try {
-            getDirectorByRating.setString(1, rating);
-            ResultSet rs = getDirectorByRating.executeQuery();
-            ArrayList<Director> tmp = new ArrayList();
-            while (rs.next()) {
-                tmp.add(new Director(rs.getInt("directorId"), rs.getString("name"), 
-                        rs.getString("rating"), rs.getString("nationality")));
+    public ArrayList search(String searchBy, String searchWord) throws SQLException {
+        ResultSet rs = null;
+        if (searchBy.equals("movie")) {
+            try {
+                createSearchByMoviePrep();
+                searchByMoviePrep.setString(1, "%" + searchWord + "%");
+                rs = searchByMoviePrep.executeQuery();
+                ArrayList<Director> tmp = new ArrayList();
+                while (rs.next()) {
+                    tmp.add(new Director(rs.getInt("directorId"), rs.getString("name"), 
+                            rs.getString("rating"), rs.getString("nationality")));
+                }
+                return tmp;
+            } finally {
+                if (rs != null)
+                    rs.close();
+                if (searchByMoviePrep != null)
+                    searchByMoviePrep.close();
             }
-            return tmp;
-        } catch (SQLException ex) {
-            System.out.println("getDirectorsByRating Didn't select anything");
-            return null;
         }
-    }
-
-    @Override
-    public ArrayList getByGenre(String genre) {
-        return null;
-    }
-
-    @Override
-    public ArrayList getByNationality(String nationality) {
-        try {
-            getDirectorByNationality.setString(1, nationality);
-            ResultSet rs = getDirectorByNationality.executeQuery();
-            ArrayList<Director> tmp = new ArrayList();
-            while (rs.next()) {
-                tmp.add(new Director(rs.getInt("directorId"), rs.getString("name"), 
-                        rs.getString("rating"), rs.getString("nationality")));
+        else {
+            try {
+                createSearchPrep(searchBy);
+                searchPrep.setString(1, "%" + searchWord + "%");
+                rs = searchPrep.executeQuery();
+                ArrayList<Director> tmp = new ArrayList();
+                while (rs.next()) {
+                    tmp.add(new Director(rs.getInt("directorId"), rs.getString("name"), 
+                            rs.getString("rating"), rs.getString("nationality")));
+                }
+                return tmp;
+            } finally {
+                if (rs != null)
+                    rs.close();
+                if (searchPrep != null)
+                    searchPrep.close();
             }
-            return tmp;
-        } catch (SQLException ex) {
-            System.out.println("getDirectorsByNationality Didn't select anything");
-            return null;
-        }
-    }
-
-    @Override
-    public ArrayList getByName(String name) {
-        try {
-            getDirectorByName.setString(1, "%" + name + "%");
-            ResultSet rs = getDirectorByName.executeQuery();
-            ArrayList<Director> tmp = new ArrayList();
-            while (rs.next()) {
-                tmp.add(new Director(rs.getInt("directorId"), rs.getString("name"), 
-                        rs.getString("rating"), rs.getString("nationality")));
-            }
-            return tmp;
-        } catch (SQLException ex) {
-            System.out.println("getDirectorsByName Didn't select anything");
-            return null;
-        }
-    }
-
-    @Override
-    public ArrayList getByArtist(String artist) {
-        return null;
-    }
-
-    @Override
-    public ArrayList getByAlbum(String album) {
-        return null;
-    }
-
-    @Override
-    public ArrayList getByDirector(String director) {
-        return null;
-    }
-
-    @Override
-    public ArrayList getByMovie(String movie) {
-        try {
-            getDirectorByMovie.setString(1, "%" + movie + "%");
-            ResultSet rs = getDirectorByMovie.executeQuery();
-            ArrayList<Director> tmp = new ArrayList();
-            while (rs.next()) {
-                tmp.add(new Director(rs.getInt("directorId"), rs.getString("name"), 
-                        rs.getString("rating"), rs.getString("nationality")));
-            }
-            return tmp;
-        } catch (SQLException ex) {
-            System.out.println("getDirectorByMovie Didn't select anything");
-            return null;
         }
     }
 }

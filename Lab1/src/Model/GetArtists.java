@@ -6,10 +6,14 @@
 package Model;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -17,134 +21,72 @@ import java.util.ArrayList;
  */
 public class GetArtists implements QueryGenerator {
     private Connection con;
-    private PreparedStatement getArtistByName;
-    private PreparedStatement getArtistByRating;
-    private PreparedStatement getArtistByNationality;
-    private PreparedStatement getArtistByAlbum;
-    
+    private PreparedStatement searchPrep;
+    private PreparedStatement searchByAlbumPrep;
     
     public GetArtists(Connection con) {
         this.con = con;
-        initPreparedStatements();
     }
     
-    private void initPreparedStatements() {
-        try {
-        // prepared statement for getArtistByName
-        String byArtistName = "SELECT * FROM T_Artist WHERE name LIKE ?";
-        getArtistByName = con.prepareStatement(byArtistName);
-        
-        // prepared statement for getArtistByRating
-        String byArtistRating = "SELECT * FROM T_Artist WHERE rating = ?";
-        getArtistByRating = con.prepareStatement(byArtistRating);
-        
-        // prepared statement for getArtistByNationality
-        String byArtistNationality = "SELECT * FROM T_Artist WHERE nationality = ?";
-        getArtistByNationality = con.prepareStatement(byArtistNationality);
-        
-        // prepared statement for getAlbumByArtist
-        String byArtistAlbum = "SELECT * FROM T_Artist WHERE "
-                + "artistId IN (SELECT artistId FROM T_AlbumDirectory WHERE "
-                + "albumId IN (SELECT albumId FROM T_Album WHERE "
-                + "title LIKE ?))";
-        getArtistByAlbum = con.prepareStatement(byArtistAlbum);
-        
-        } catch (SQLException ex) {
-            System.out.println("what to do here? Prepared "
-                    + "statements of getAlbum crashed");
-        }
+    private void createSearchPrep(String searchBy) throws SQLException {
+        String prepState;
+        if (searchBy.equals("name"))
+            prepState = "SELECT * FROM T_Artist WHERE name LIKE ?";
+        else if (searchBy.equals("rating"))
+            prepState = "SELECT * FROM T_Artist WHERE rating LIKE ?";
+        else
+            prepState = "SELECT * FROM T_Artist WHERE nationality LIKE ?";
+        searchPrep = con.prepareStatement(prepState);
     }
     
-    @Override
-    public ArrayList getByTitle(String title) {
-        return null;
-    }
-
-    @Override
-    public ArrayList getByRating(String rating) {
-        try {
-            getArtistByRating.setString(1, rating);
-            ResultSet rs = getArtistByRating.executeQuery();
-            ArrayList<Artist> tmp = new ArrayList();
-            while (rs.next()) {
-                tmp.add(new Artist(rs.getInt("artistId"), rs.getString("name"), 
-                        rs.getString("rating"), rs.getString("nationality")));
-            }
-            return tmp;
-        } catch (SQLException ex) {
-            System.out.println("getArtistsByRating Didn't select anything");
-            return null;
-        }
-    }
-
-    @Override
-    public ArrayList getByGenre(String genre) {
-        return null;
-    }
-
-    @Override
-    public ArrayList getByNationality(String nationality) {
-        try {
-            getArtistByNationality.setString(1, nationality);
-            ResultSet rs = getArtistByNationality.executeQuery();
-            ArrayList<Artist> tmp = new ArrayList();
-            while (rs.next()) {
-                tmp.add(new Artist(rs.getInt("artistId"), rs.getString("name"), 
-                        rs.getString("rating"), rs.getString("nationality")));
-            }
-            return tmp;
-        } catch (SQLException ex) {
-            System.out.println("getArtistsByNationality Didn't select anything");
-            return null;
-        }
+    private void createSearchByAlbumPrep() throws SQLException {
+        String byArtist = "SELECT * FROM T_Album WHERE "
+                + "albumId IN (SELECT albumId FROM T_AlbumDirectory WHERE "
+                + "artistId IN (SELECT artistId FROM T_Artist WHERE "
+                + "name LIKE ?))";
+        searchByAlbumPrep = con.prepareStatement(byArtist);
     }
     
+    
     @Override
-    public ArrayList<Artist> getByName(String name) {
-        try {
-            getArtistByName.setString(1, "%" + name + "%");
-            ResultSet rs = getArtistByName.executeQuery();
-            ArrayList<Artist> tmp = new ArrayList();
-            while (rs.next()) {
-                tmp.add(new Artist(rs.getInt("artistId"), rs.getString("name"), 
-                        rs.getString("rating"), rs.getString("nationality")));
+    public ArrayList search(String searchBy, String searchWord) throws SQLException {
+        ResultSet rs = null;
+        if (searchBy.equals("album")) {
+            try {
+                createSearchByAlbumPrep();
+                searchByAlbumPrep.setString(1, "%" + searchWord + "%");
+                rs = searchByAlbumPrep.executeQuery();
+                ArrayList<Artist> tmp = new ArrayList();
+                while (rs.next()) {
+                    tmp.add(new Artist(rs.getInt("artistId"), rs.getString("name"), 
+                            rs.getString("rating"), rs.getString("nationality")));
+                }
+                return tmp;
+            } finally {
+                if (rs != null)
+                    rs.close();
+                if (searchByAlbumPrep != null)
+                    searchByAlbumPrep.close();
             }
-            return tmp;
-        } catch (SQLException ex) {
-            System.out.println("getArtistsByName Didn't select anything");
-            return null;
+        }
+        else {
+            try {
+                createSearchPrep(searchBy);
+                searchPrep.setString(1, "%" + searchWord + "%");
+                rs = searchPrep.executeQuery();
+                ArrayList<Artist> tmp = new ArrayList();
+                while (rs.next()) {
+                    tmp.add(new Artist(rs.getInt("artistId"), rs.getString("name"), 
+                            rs.getString("rating"), rs.getString("nationality")));
+                }
+                return tmp;
+            } finally {
+                if (rs != null)
+                    rs.close();
+                if (searchPrep != null)
+                    searchPrep.close();
+            }
         }
     }
 
-    @Override
-    public ArrayList getByArtist(String artist) {
-        return null;
-    }
-
-    @Override
-    public ArrayList getByAlbum(String album) {
-        try {
-            getArtistByAlbum.setString(1, "%" + album + "%");
-            ResultSet rs = getArtistByAlbum.executeQuery();
-            ArrayList<Artist> tmp = new ArrayList();
-            while (rs.next()) {
-                tmp.add(new Artist(rs.getInt("artistId"), rs.getString("name"), 
-                        rs.getString("rating"), rs.getString("nationality")));
-            }
-            return tmp;
-        } catch (SQLException ex) {
-            System.out.println("getArtistByAlbum Didn't select anything");
-            return null;
-        }
-    }
-
-    @Override
-    public ArrayList getByDirector(String director) {
-        return null;
-    }
-
-    @Override
-    public ArrayList getByMovie(String movie) {
-        return null;
-    }
 }

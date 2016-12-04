@@ -5,15 +5,21 @@
 */
 package Controller;
 
+import Model.AddNewAlbArt;
+import Model.AddNewMovDir;
 import Model.Album;
 import Model.DBQueries;
 import Model.QueryExecutor;
 import Model.Artist;
 import Model.Director;
 import Model.GetAlbums;
+import Model.GetArtists;
+import Model.GetDirectors;
+import Model.GetMovies;
 import Model.Model;
 import Model.Movie;
 import Model.QueryGenerator;
+import Model.InsertGenerator;
 import View.View;
 import java.sql.Connection;
 import java.sql.Date;
@@ -25,18 +31,23 @@ import javafx.application.Platform;
  *
  * @author Niklas
  */
-public class Controller implements QueryGenerator {
+public class Controller {
     private ArrayList<DBQueries> artists;
     private ArrayList<QueryGenerator> theQueries;
+    private ArrayList<InsertGenerator> theInserts;
     private Model model;
     private View view;
     private QueryExecutor exec;
-    private int index;
+    private int queryIndex;
+    private int insertIndex;
     
     public Controller(Model model, View view) {
         artists = new ArrayList();
         theQueries = new ArrayList();
-        index = 0;
+        theInserts = new ArrayList();
+        
+        queryIndex = 0;
+        insertIndex = 0;
         this.model = model;
         this.view = view;
         view.ControllerHook(this);
@@ -45,12 +56,17 @@ public class Controller implements QueryGenerator {
     public void systemAccess() throws SQLException {
         exec = new QueryExecutor(model.getMyConn());
         theQueries.add(new GetAlbums(model.getMyConn()));
+        theQueries.add(new GetArtists(model.getMyConn()));
+        //theQueries.add(new GetMovies(model.getMyConn()));
+        theQueries.add(new GetDirectors(model.getMyConn()));
+        /*theInserts.add(new AddNewAlbArt(model.getMyConn()));
+        theInserts.add(new AddNewMovDir(model.getMyConn()));*/
         artists.add(exec);
-        insertAlbum();
+        //insertAlbum();
     }
     
     public void handleButton(){
-        //test();
+        test();
         System.out.println("Conasdasdsafirm");
     }
     
@@ -60,7 +76,7 @@ public class Controller implements QueryGenerator {
             systemAccess();
             // new view of everything
             view.hide();
-            artistsByName();
+            //artistsByName();
         }
     }
     
@@ -72,66 +88,141 @@ public class Controller implements QueryGenerator {
     
     
     public void test() {
-        ArrayList<Album> asd = getByTitle("da");
+        try {
+            //ArrayList<Album> asd = getByTitle("da");
+            searcher3("name", "am");
+        } catch (SQLException ex) {
+            System.out.println("EVERYBODY GO SHIT FUCK");
+        }
+        //System.out.println(asd.get(0).toString());
+    }
+    
+    public void searcher(String searchBy, String searchWord) throws SQLException {
+        ArrayList<Album> asd = theQueries.get(0).search(searchBy, searchWord);
         System.out.println(asd.get(0).toString());
     }
     
-    
-    @Override
-    public ArrayList getByTitle(String title) {
-        return theQueries.get(index).getByTitle(title);
+    public void searcher2(String searchBy, String searchWord) throws SQLException {
+        ArrayList<Artist> asd = theQueries.get(1).search(searchBy, searchWord);
+        System.out.println(asd.get(0).toString());
+        System.out.println(asd.get(1).toString());
     }
+    
+    public void searcher3(String searchBy, String searchWord) throws SQLException {
+        ArrayList<Director> asd = theQueries.get(2).search(searchBy, searchWord);
+        System.out.println(asd.get(0).toString());
+        System.out.println(asd.get(1).toString());
+    }
+    
+    /*@Override
+    public ArrayList getByTitle(String title) {
+        ArrayList<Object> tmp = null;
+        new Thread() {
+            public void run() {
+                try {
+                    ArrayList tmp = theQueries.get(queryIndex).getByTitle(title);
+                } catch (SQLException ex) {
+                    // ALERT MESSAGE 
+                }
+                Platform.runLater(
+                        new Runnable() {
+                            public void run() {
+                                //UPDATE VIEW with tmp
+                                
+                            }
+                        });
+            }
+        }.start();
+        return theQueries.get(queryIndex).getByTitle(title);
+    }*/
     
     @Override
     public ArrayList getByRating(String rating) {
-        return theQueries.get(index).getByRating(rating);
+        return theQueries.get(queryIndex).getByRating(rating);
     }
 
     @Override
     public ArrayList getByGenre(String genre) {
-        return theQueries.get(index).getByGenre(genre);
+        return theQueries.get(queryIndex).getByGenre(genre);
     }
 
     @Override
     public ArrayList getByNationality(String nationality) {
-        return theQueries.get(index).getByNationality(nationality);
+        return theQueries.get(queryIndex).getByNationality(nationality);
     }
 
     @Override
     public ArrayList getByName(String name) {
-        return theQueries.get(index).getByName(name);
+        return theQueries.get(queryIndex).getByName(name);
     }
     
     @Override
     public ArrayList getByArtist(String artist) {
-        return theQueries.get(index).getByArtist(artist);
+        return theQueries.get(queryIndex).getByArtist(artist);
     }
 
     @Override
     public ArrayList getByAlbum(String album) {
-        return theQueries.get(index).getByAlbum(album);
+        return theQueries.get(queryIndex).getByAlbum(album);
     }
 
     @Override
     public ArrayList getByDirector(String director) {
-        return theQueries.get(index).getByDirector(director);
+        return theQueries.get(queryIndex).getByDirector(director);
     }
 
     @Override
     public ArrayList getByMovie(String movie) {
-        return theQueries.get(index).getByMovie(movie);
+        return theQueries.get(queryIndex).getByMovie(movie);
+    }
+    
+    @Override
+    public ArrayList getAlbMovByAll(String title, String genre, String rating, Date rDate) {
+        return theQueries.get(queryIndex).getAlbMovByAll(title, genre, rating, rDate);
+    }
+
+    @Override
+    public ArrayList getArtDirByAll(String name, String rating, String nationality) {
+        return theQueries.get(queryIndex).getArtDirByAll(name, rating, nationality);
+    }
+    
+    @Override
+    public void addNewAlbMov(String title, String genre, String rating, Date rDate) {
+        theInserts.get(insertIndex).addNewAlbMov(title, genre, rating, rDate);
+    }
+
+    @Override
+    public void addNewArtDir(String name, String rating, String nationality) {
+        theInserts.get(insertIndex).addNewArtDir(name, rating, nationality);
+    }
+
+    @Override
+    public void addNewADMD() {
+        theInserts.get(insertIndex).addNewADMD();
+    }
+    
+    public void addNew(String title, String genre, String rating, Date rDate, String name, String rating, String nationality) {
+        
     }
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
+        /*new Thread() {
+            public void run() {
+                try {
+
+                } catch (SQLException ex) {
+                    // ALERT MESSAGE 
+                }
+                Platform.runLater(
+                        new Runnable() {
+                            public void run() {
+                                //UPDATE VIEW
+                                
+                            }
+                        });
+            }
+        }.start();
+    */
     
     
     
@@ -317,5 +408,13 @@ public class Controller implements QueryGenerator {
         System.out.println("\ninsertMovieDirectory");
         artists.get(0).addNewMovieDirectory();
     }
+
+    @Override
+    public void close() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+
+
 }
 
