@@ -19,6 +19,8 @@ import Model.Model;
 import Model.Movie;
 import Model.QueryGenerator;
 import Model.InsertGenerator;
+import View.AlbumTableView;
+import View.AllTableViews;
 import View.ArtistTableView;
 import View.View;
 import java.sql.Connection;
@@ -37,7 +39,9 @@ public class Controller {
     private ArrayList<DBQueries> artists;
     private ArrayList<QueryGenerator> theQueries;
     private ArrayList<InsertGenerator> theInserts;
-    private ArtistTableView artistTableView;
+    private ArrayList<AllTableViews> theTables;
+    //private ArtistTableView artistTableView;
+    //private AlbumTableView albumTableView;
     private Model model;
     private View view;
     private int queryIndex;
@@ -48,7 +52,7 @@ public class Controller {
         theQueries = new ArrayList();
         theInserts = new ArrayList();
         
-        queryIndex = 1;
+        queryIndex = 0;
         insertIndex = 0;
         this.model = model;
         this.view = view;
@@ -65,9 +69,12 @@ public class Controller {
         //insertAlbum();
     }
     
-    public void connectViews(ArtistTableView artistTableView) {
+    public void connectViews(AllTableViews artw, AllTableViews altw) {
         System.out.println("CONNECTED VIEWS");
-        this.artistTableView = artistTableView;
+        theTables = new ArrayList();
+        theTables.add(altw);
+        theTables.add(artw);
+        
     }
     
     public void handleButton(){
@@ -79,7 +86,7 @@ public class Controller {
         System.out.println("fasdfa<");
         if (model.validateUserIdentity(userName,passWord)) {
             systemAccess();
-            //test();
+            test();
             // new view of everything
             //view.hide();
             //artistsByName();
@@ -95,32 +102,18 @@ public class Controller {
     }
     
     
+    public void setIndex(int index) {
+        queryIndex = index;
+    }
     
+    public void setIndexMov(int index) {
+        insertIndex = index;
+    }
     
     public void test() {
-        try {
-            //ArrayList<Album> asd = getByTitle("da");
-            searcher3("name", "d");
-            //Date d = new Date(85, 4, 14);
-            //insert1("oai", "rock", "3", d, "asd", "1", "qwe");
-        } catch (SQLException ex) {
-            System.out.println("EVERYBODY GO SHIT FUCK");
-        }
-        //System.out.println(asd.get(0).toString());
     }
     
-    public void searcher(String searchBy, String searchWord) throws SQLException {
-        ArrayList<Album> asd = theQueries.get(0).search(searchBy, searchWord);
-        System.out.println(asd.get(0).toString());
-    }
-    
-    public void searcher2(String searchBy, String searchWord) throws SQLException {
-        ArrayList<Artist> asd = theQueries.get(1).search(searchBy, searchWord);
-        System.out.println(asd.get(0).toString());
-        System.out.println(asd.get(1).toString());
-    }
-    
-    public void searcher3(String searchBy, String searchWord) throws SQLException {
+    public void search(String searchBy, String searchWord) {
         new Thread() {
             public void run() {
                 try {
@@ -130,8 +123,8 @@ public class Controller {
                                 public void run() {
                                     //UPDATE VIEW while loop?
                                     System.out.println(asd.get(0).toString());
-                                    System.out.println(asd.get(1).toString());
-                                    artistTableView.showTable(asd);
+                                    theTables.get(queryIndex).showTable(asd);
+                                    view.changeScene(queryIndex);
                                 }
                             });
                 } catch (SQLException ex) {
@@ -145,6 +138,14 @@ public class Controller {
         /*ArrayList<Director> asd = theQueries.get(2).search(searchBy, searchWord);
         System.out.println(asd.get(0).toString());
         System.out.println(asd.get(1).toString());*/
+    }
+    
+    public void addNew() {
+        //open add view (insertIndex)
+    }
+    
+    public void chooseRating(String rating) {
+        
     }
     
     public void insert1(String title, String genre, String ratingAM, Date rDate, String name, String ratingAD, String nationality) throws SQLException {
@@ -176,23 +177,7 @@ public class Controller {
     
 
     
-        /*new Thread() {
-            public void run() {
-                try {
 
-                } catch (SQLException ex) {
-                    // ALERT MESSAGE 
-                }
-                Platform.runLater(
-                        new Runnable() {
-                            public void run() {
-                                //UPDATE VIEW
-                                
-                            }
-                        });
-            }
-        }.start();
-    */
     
     
     
@@ -200,138 +185,7 @@ public class Controller {
         System.out.println("exitlul");
     }
     
-    /*** GET ARTIST ***/
-    public void artistsByName() {
-        new Thread() {
-            public void run() {
-                System.out.println("\nartistsByName");
-                String name = "na";
-                ArrayList<Artist> tmp;
-                tmp = artists.get(0).getArtistsByName(name);
-                Platform.runLater(
-                        new Runnable() {
-                            public void run() {
-                                for (Artist a : tmp) {
-                                    System.out.println(a.toString());
-                                }
-                            }
-                        });
-            }
-        }.start();
-    }
-    
-    public void artistsByRating() {
-        System.out.println("\nartistsByRating");
-        String rating = "11";
-        ArrayList<Artist> tmp;
-        tmp = artists.get(0).getArtistsByRating(rating);
-        for (Artist a : tmp) {
-            System.out.println(a.toString());
-        }
-    }
-    
-    /*** GET ALBUM ***/
-    public void albumByTitle() {
-        System.out.println("\nalbumByTitle");
-        String title = "horse";
-        ArrayList<Album> tmp;
-        tmp = artists.get(0).getAlbumsByTitle(title);
-        for (Album a : tmp) {
-            System.out.println(a.toString());
-        }
-    }
-    
-    public void albumByGenre() {
-        System.out.println("\nalbumByGenre");
-        String genre = "punk";
-        ArrayList<Album> tmp;
-        tmp = artists.get(0).getAlbumsByGenre(genre);
-        for (Album a : tmp) {
-            System.out.println(a.toString());
-        }
-    }
-    
-    public void albumByRating() {
-        System.out.println("\nalbumByRating");
-        String rating = "15";
-        ArrayList<Album> tmp;
-        tmp = artists.get(0).getAlbumsByRating(rating);
-        for (Album a : tmp) {
-            System.out.println(a.toString());
-        }
-    }
-    
-    public void albumByArtist() {
-        System.out.println("\nalbumByArtist");
-        String artist = "e";
-        ArrayList<Album> tmp;
-        tmp = artists.get(0).getAlbumsByArtist(artist);
-        for (Album a : tmp) {
-            System.out.println(a.toString());
-        }
-    }
-    
-    /*** GET DIRECTOR ***/
-    public void directorsByName() {
-        System.out.println("\ndirectorsByName");
-        String name = "Mel";
-        ArrayList<Director> tmp;
-        tmp = artists.get(0).getDirectorsByName(name);
-        for (Director a : tmp) {
-            System.out.println(a.toString());
-        }
-    }
-    
-    public void directorsByRating() {
-        System.out.println("\ndirectorsByRating");
-        String rating = "11";
-        ArrayList<Director> tmp;
-        tmp = artists.get(0).getDirectorsByRating(rating);
-        for (Director a : tmp) {
-            System.out.println(a.toString());
-        }
-    }
-    
-    /*** GET MOVIE.. ***/
-    public void movieByTitle() {
-        System.out.println("\nmovieByTitle");
-        String title = "horse";
-        ArrayList<Movie> tmp;
-        tmp = artists.get(0).getMoviesByTitle(title);
-        for (Movie a : tmp) {
-            System.out.println(a.toString());
-        }
-    }
-    
-    public void movieByGenre() {
-        System.out.println("\nmovieByGenre");
-        String genre = "punk";
-        ArrayList<Movie> tmp;
-        tmp = artists.get(0).getMoviesByGenre(genre);
-        for (Movie a : tmp) {
-            System.out.println(a.toString());
-        }
-    }
-    
-    public void movieByRating() {
-        System.out.println("\nmovieByRating");
-        String rating = "15";
-        ArrayList<Movie> tmp;
-        tmp = artists.get(0).getMoviesByRating(rating);
-        for (Movie a : tmp) {
-            System.out.println(a.toString());
-        }
-    }
-    
-    public void movieByDirector() {
-        System.out.println("\nmovieByDirector");
-        String director = "e";
-        ArrayList<Movie> tmp;
-        tmp = artists.get(0).getMoviesByDirector(director);
-        for (Movie a : tmp) {
-            System.out.println(a.toString());
-        }
-    }
+   
     
     /*** ADD ALBUM AND ARTIST ***/
     public void insertAlbum() {

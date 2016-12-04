@@ -24,6 +24,7 @@ public class GetArtists implements QueryGenerator {
     private PreparedStatement searchPrep;
     private PreparedStatement searchByAlbumPrep;
     private PreparedStatement searchByAllPrep;
+    private PreparedStatement searchByPkeyPrep;
     
     public GetArtists(Connection con) {
         this.con = con;
@@ -41,10 +42,10 @@ public class GetArtists implements QueryGenerator {
     }
     
     private void createSearchByAlbumPrep() throws SQLException {
-        String byArtist = "SELECT * FROM T_Album WHERE "
-                + "albumId IN (SELECT albumId FROM T_AlbumDirectory WHERE "
-                + "artistId IN (SELECT artistId FROM T_Artist WHERE "
-                + "name LIKE ?))";
+        String byArtist = "SELECT * FROM T_Artist WHERE "
+                + "artistId IN (SELECT artistId FROM T_AlbumDirectory WHERE "
+                + "albumId IN (SELECT albumId FROM T_Album WHERE "
+                + "title LIKE ?))";
         searchByAlbumPrep = con.prepareStatement(byArtist);
     }
     
@@ -54,6 +55,12 @@ public class GetArtists implements QueryGenerator {
         searchByAllPrep = con.prepareStatement(byAll);
     }
     
+    private void createSearchByPkeyPrep() throws SQLException {
+        String byKey = "SELECT title FROM T_Album WHERE albumId = "
+                + "(SELECT albumId FROM T_AlbumDirectory WHERE "
+                + "artistId = ?)";
+        searchByPkeyPrep = con.prepareStatement(byKey);
+    }
     
     @Override
     public ArrayList search(String searchBy, String searchWord) throws SQLException {
@@ -65,8 +72,9 @@ public class GetArtists implements QueryGenerator {
                 rs = searchByAlbumPrep.executeQuery();
                 ArrayList<Artist> tmp = new ArrayList();
                 while (rs.next()) {
-                    tmp.add(new Artist(rs.getInt("artistId"), rs.getString("name"), 
-                            rs.getString("rating"), rs.getString("nationality")));
+                    ArrayList<String> tmp3 = searchByPkey(rs.getInt(1));
+                    tmp.add(new Artist(rs.getInt(1), rs.getString("name"), 
+                            rs.getString("rating"), rs.getString("nationality"), tmp3));
                 }
                 return tmp;
             } finally {
@@ -83,8 +91,9 @@ public class GetArtists implements QueryGenerator {
                 rs = searchPrep.executeQuery();
                 ArrayList<Artist> tmp = new ArrayList();
                 while (rs.next()) {
-                    tmp.add(new Artist(rs.getInt("artistId"), rs.getString("name"), 
-                            rs.getString("rating"), rs.getString("nationality")));
+                    ArrayList<String> tmp3 = searchByPkey(rs.getInt(1));
+                    tmp.add(new Artist(rs.getInt(1), rs.getString("name"), 
+                            rs.getString("rating"), rs.getString("nationality"), tmp3));
                 }
                 return tmp;
             } finally {
@@ -107,8 +116,9 @@ public class GetArtists implements QueryGenerator {
             rs = searchByAllPrep.executeQuery();
             ArrayList<Artist> tmp = new ArrayList();
             while (rs.next()) {
-                tmp.add(new Artist(rs.getInt("artistId"), rs.getString("name"), 
-                        rs.getString("rating"), rs.getString("nationality")));
+                    ArrayList<String> tmp3 = searchByPkey(rs.getInt(1));
+                    tmp.add(new Artist(rs.getInt(1), rs.getString("name"), 
+                            rs.getString("rating"), rs.getString("nationality"), tmp3));
             }
             if (tmp.size() > 0)
                 return tmp;
@@ -120,6 +130,26 @@ public class GetArtists implements QueryGenerator {
             if (searchByAllPrep != null)
                 searchByAllPrep.close();
         }
+    }
+    
+    private ArrayList<String> searchByPkey(int pKey) throws SQLException {
+        ResultSet rs = null;
+        try {
+            createSearchByPkeyPrep();
+            //searchByPkeyPrep.clearParameters();
+            searchByPkeyPrep.setInt(1, pKey);
+            rs = searchByPkeyPrep.executeQuery();
+            ArrayList<String> tmp = new ArrayList();
+            while (rs.next()) {
+                tmp.add(rs.getString("title"));
+            }
+            return tmp;
+        } finally {
+                if (rs != null)
+                    rs.close();
+                if (searchByPkeyPrep != null)
+                    searchByPkeyPrep.close();
+            }
     }
 
 }

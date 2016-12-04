@@ -24,6 +24,7 @@ public class GetAlbums implements QueryGenerator{
     private PreparedStatement searchPrep;
     private PreparedStatement searchByArtistPrep;
     private PreparedStatement searchByAllPrep;
+    private PreparedStatement searchByPkeyPrep;
     
     public GetAlbums(Connection con) {
         this.con = con;
@@ -56,6 +57,13 @@ public class GetAlbums implements QueryGenerator{
         searchByAllPrep = con.prepareStatement(byAll);
     }
     
+    private void createSearchByPkeyPrep() throws SQLException {
+        String byKey = "SELECT name FROM T_Artist WHERE artistId = "
+                + "(SELECT artistId FROM T_AlbumDirectory WHERE "
+                + "albumId = ?)";
+        searchByPkeyPrep = con.prepareStatement(byKey);
+    }
+    
     @Override
     public ArrayList<Album> search(String searchBy, String searchWord) throws SQLException {
         ResultSet rs = null;
@@ -66,8 +74,10 @@ public class GetAlbums implements QueryGenerator{
                 rs = searchByArtistPrep.executeQuery();
                 ArrayList<Album> tmp = new ArrayList();
                 while (rs.next()) {
+                    ArrayList<String> tmp3 = searchByPkey(rs.getInt(1));
+                    
                     tmp.add(new Album(rs.getInt("albumId"), rs.getString("title"), rs.getString("genre"),
-                            rs.getString("rating"), rs.getDate("releaseDate")));
+                            rs.getString("rating"), rs.getDate("releaseDate"), tmp3));
                 }
                 return tmp;
             } finally {
@@ -81,12 +91,16 @@ public class GetAlbums implements QueryGenerator{
             try {
                 createSearchPrep(searchBy);
                 searchPrep.setString(1, "%" + searchWord + "%");
-                
                 rs = searchPrep.executeQuery();
                 ArrayList<Album> tmp = new ArrayList();
                 while (rs.next()) {
+                    System.out.println("aaa");
+                    ArrayList<String> tmp3 = searchByPkey(rs.getInt(1));
+                    System.out.println("ttt");
                     tmp.add(new Album(rs.getInt("albumId"), rs.getString("title"), rs.getString("genre"),
-                            rs.getString("rating"), rs.getDate("releaseDate")));
+                            rs.getString("rating"), rs.getDate("releaseDate"), tmp3));
+                    System.out.println("eee");
+                    System.out.println(tmp.get(0).toString());
                 }
                 return tmp;
             }  finally {
@@ -110,8 +124,9 @@ public class GetAlbums implements QueryGenerator{
             rs = searchByAllPrep.executeQuery();
             ArrayList<Album> tmp = new ArrayList();
             while (rs.next()) {
-                tmp.add(new Album(rs.getInt("albumId"), rs.getString("title"), rs.getString("genre"),
-                        rs.getString("rating"), rs.getDate("releaseDate")));
+                    ArrayList<String> tmp3 = searchByPkey(rs.getInt(1));
+                    tmp.add(new Album(rs.getInt("albumId"), rs.getString("title"), rs.getString("genre"),
+                            rs.getString("rating"), rs.getDate("releaseDate"), tmp3));
             }
             if (tmp.size() > 0)
                 return tmp;
@@ -120,9 +135,29 @@ public class GetAlbums implements QueryGenerator{
         } finally {
             if (rs != null)
                 rs.close();
-            if (searchPrep != null)
-                searchPrep.close();
+            if (searchByAllPrep != null)
+                searchByAllPrep.close();
         }
+    }
+    
+    private ArrayList<String> searchByPkey(int pKey) throws SQLException {
+        ResultSet rs = null;
+        try {
+            createSearchByPkeyPrep();
+            //searchByPkeyPrep.clearParameters();
+            searchByPkeyPrep.setInt(1, pKey);
+            rs = searchByPkeyPrep.executeQuery();
+            ArrayList<String> tmp = new ArrayList();
+            while (rs.next()) {
+                tmp.add(rs.getString("name"));
+            }
+            return tmp;
+        } finally {
+                if (rs != null)
+                    rs.close();
+                if (searchByPkeyPrep != null)
+                    searchByPkeyPrep.close();
+            }
     }
     
 }

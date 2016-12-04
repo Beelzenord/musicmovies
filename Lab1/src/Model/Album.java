@@ -6,6 +6,8 @@
 package Model;
 
 import java.sql.Date;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 /**
@@ -18,13 +20,17 @@ public class Album {
     private String genre;
     private String rating;
     private Date releaseDate;
-
-    public Album(int albumId, String title, String genre, String rating, Date releaseDate) {
+    private ArrayList<String> artists;
+    
+    public Album(int albumId, String title, String genre, String rating, Date releaseDate, ArrayList<String> artists) {
         this.albumId = albumId;
         this.title = title;
         this.genre = genre;
         this.rating = rating;
         this.releaseDate = releaseDate;
+        this.artists = new ArrayList();
+        for (String s : artists)
+            this.artists.add(s);
     }
     public Album(String title, String genre, String rating, Date releaseDate) {
         this.title = title;
@@ -71,6 +77,14 @@ public class Album {
 
     public void setReleaseDate(Date releaseDate) {
         this.releaseDate = releaseDate;
+    }
+    
+    public String getArtists() {
+        String tmp = new String("");
+        for (String s : artists) {
+            tmp += s + ", ";
+        }
+        return tmp;
     }
     
     public ArrayList<String> getAttributeNames() {

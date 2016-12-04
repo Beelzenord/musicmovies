@@ -4,6 +4,7 @@ import Controller.Controller;
 import Model.Model;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
@@ -34,47 +35,84 @@ public class View {
     private BorderPane bPane;
     private StackPane sPane2;
     private Scene scene;
+    private ArrayList<Scene> scenes;
+    private ArrayList<BorderPane> bPanes;
     private Scene scene2;
     private Controller cont;
     private Stage stage2;
     private ArtistTableView artistTableView;
+    private AlbumTableView albumTableView;
     private GridPane grid;
+    private Stage stage;
     
     private CenterTableView cView;
     private TextField theUserName;
     private PasswordField pwBox;
     
     private TopHboxView hBox;
+    private ArrayList<TopHboxView> hBoxes;
+    private ArrayList<BotHboxView> botBoxes;
     
     private LogInWindow lW;
     public View(Stage stage, Model model){
-      
-        this.model = model;
-        bPane = new BorderPane();
-        scene = new Scene(bPane,400, 500); 
+        
+        this.stage = stage;
+        
+        scenes = new ArrayList();
+        bPanes = new ArrayList();
         artistTableView = new ArtistTableView();
+        albumTableView = new AlbumTableView();
+        this.model = model;
+        initScenes();
+        //bPane = new BorderPane();
+        //scene = new Scene(bPane,400, 500);
+
         lW = new LogInWindow();
-        stage.setTitle("musicMovies");
-        stage.setScene(scene);
-        stage.show();
+        this.stage.setTitle("musicMovies");
+        this.stage.setScene(scenes.get(0));
+        this.stage.show();
     }
+    
+    private void initScenes() {
+        
+        for (int i = 0; i < 2; i++) {
+            bPanes.add(new BorderPane());
+            scenes.add(new Scene(bPanes.get(i), 800, 500));
+            
+        }
+    }
+    
     public void startMainView(){
         System.out.println("Liquid");
         cView = new CenterTableView();
-        hBox = new TopHboxView(cont);
+        hBoxes = new ArrayList();
+        botBoxes = new ArrayList();
+        //hBox = new TopHboxView(cont);
         
        // bPane.getChildren().addAll(cView);
-        bPane.setCenter(artistTableView);
-        bPane.setLeft(cView);
-        bPane.setTop(hBox);   
+        //bPane.setCenter(artistTableView);
+        for (int i = 0; i < 2; i++) {
+            hBoxes.add(new TopHboxView(cont));
+            botBoxes.add(new BotHboxView(cont));
+            if (i == 0)
+                bPanes.get(i).setCenter(albumTableView);
+            else if (i == 1)
+                bPanes.get(i).setCenter(artistTableView);
+            bPanes.get(i).setTop(hBoxes.get(i));
+            bPanes.get(i).setBottom(botBoxes.get(i));
+        }
     }
    
    
     public void ControllerHook(Controller controller){
         cont = controller;
         lW.logToController(controller);
-        cont.connectViews(artistTableView);
+        cont.connectViews(artistTableView, albumTableView);
         System.out.println("hooked to controller");
+    }
+    
+    public void changeScene(int index) {
+        stage.setScene(scenes.get(index));
     }
     
      public void hide() {

@@ -18,7 +18,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
  * @author Niklas
  */
 public class ArtistTableView extends TableView implements AllTableViews {
-    private ObservableList<Artist> observList;
     private TableColumn name;
     private TableColumn rating;
     private TableColumn nationality;
@@ -36,20 +35,19 @@ public class ArtistTableView extends TableView implements AllTableViews {
         rating.setMinWidth(80);
         nationality = new TableColumn("Nationality");
         nationality.setMinWidth(80);
-        /*album = new TableColumn("Album");
-        album.setMinWidth(80);*/
+        album = new TableColumn("Albums");
+        album.setMinWidth(120);
         
-        this.getColumns().addAll(name, rating, nationality);
+        this.getColumns().addAll(name, rating, nationality, album);
         name.setCellValueFactory(
             new PropertyValueFactory<Artist, String>("name"));
         rating.setCellValueFactory(
             new PropertyValueFactory<Artist, String>("rating"));
         nationality.setCellValueFactory(
             new PropertyValueFactory<Artist, String>("nationality"));
-        /*album.setCellValueFactory(
-            new PropertyValueFactory<Artist, String>("album"));*/
+        album.setCellValueFactory(
+            new PropertyValueFactory<Artist, ArrayList<String>>("albums"));
         System.out.println("INITIATED");
-        //observBooks = FXCollections.observableArrayList(library.getList());
     }    
     
     @Override
@@ -57,12 +55,18 @@ public class ArtistTableView extends TableView implements AllTableViews {
         ObservableList<Artist> tmpObvBooks;
         tmpObvBooks = FXCollections.observableArrayList((ArrayList<Artist>) theResult);
         this.setItems(tmpObvBooks);
-        
     }
     
-    /*public void refresh() {
-        observList.removeAll(observList);
-        observList.addAll(library.getList());
-        this.setItems(observList);
-    }*/
+    @Override
+    public int userRating() {
+        ObservableList<Artist> selectedAritst;
+
+        selectedAritst = this.getSelectionModel().getSelectedItems();
+        ArrayList<Artist> tmp = new ArrayList();
+        for (Artist b : selectedAritst) {
+            tmp.add(b);
+        }
+        return tmp.get(0).getArtistId();
+    }
+    
 }
