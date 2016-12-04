@@ -1,7 +1,6 @@
 
 package View;
 import Controller.Controller;
-import Model.QueryExecutor;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

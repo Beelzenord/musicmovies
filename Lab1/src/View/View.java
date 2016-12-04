@@ -37,7 +37,7 @@ public class View {
     private Scene scene2;
     private Controller cont;
     private Stage stage2;
-    
+    private ArtistTableView artistTableView;
     private GridPane grid;
     
     private CenterTableView cView;
@@ -52,6 +52,7 @@ public class View {
         this.model = model;
         bPane = new BorderPane();
         scene = new Scene(bPane,400, 500); 
+        artistTableView = new ArtistTableView();
         lW = new LogInWindow();
         stage.setTitle("musicMovies");
         stage.setScene(scene);
@@ -61,7 +62,9 @@ public class View {
         System.out.println("Liquid");
         cView = new CenterTableView();
         hBox = new TopHboxView(cont);
+        
        // bPane.getChildren().addAll(cView);
+        bPane.setCenter(artistTableView);
         bPane.setLeft(cView);
         bPane.setTop(hBox);   
     }
@@ -70,6 +73,7 @@ public class View {
     public void ControllerHook(Controller controller){
         cont = controller;
         lW.logToController(controller);
+        cont.connectViews(artistTableView);
         System.out.println("hooked to controller");
     }
     

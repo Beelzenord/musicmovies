@@ -55,7 +55,7 @@ public class AddNewAlbArt implements InsertGenerator {
         try {
             con.setAutoCommit(false);
             
-            ArrayList<Album> tmp1 = new GetAlbums(con).getAlbMovByAll(title, genre, ratingAM, rDate);
+            ArrayList<Album> tmp1 = new GetAlbums(con).searchByAll(title, genre, ratingAM, rDate);
             if (tmp1 == null) {
                 ResultSet rs = null;
                 try {
@@ -68,14 +68,17 @@ public class AddNewAlbArt implements InsertGenerator {
                     while (rs.next())
                         albumPKEY = rs.getInt(1);
                 } finally {
-                    rs.close();
+                    if (rs != null)
+                        rs.close();
+                    if (insertAlbum != null)
+                        insertAlbum.close();
                 }
             }
             else
                 albumPKEY = tmp1.get(0).getAlbumId();
             
             
-            ArrayList<Artist> tmp2 = new GetArtists(con).getArtDirByAll(name, ratingAD, nationality);
+            ArrayList<Artist> tmp2 = new GetArtists(con).searchByAll(name, ratingAD, nationality, rDate);
             if (tmp2 == null) {
                 ResultSet rs = null;
                 try {
@@ -113,7 +116,7 @@ public class AddNewAlbArt implements InsertGenerator {
         }
     }
     
-    @Override
+    /*@Override
     public void addNewAlbMov(String title, String genre, String rating, Date rDate) {
         ArrayList<Album> tmp = new GetAlbums(con).getAlbMovByAll(title, genre, rating, rDate);
         if (tmp == null) {
@@ -176,6 +179,6 @@ public class AddNewAlbArt implements InsertGenerator {
         insertAlbum.close();
         insertArtist.close();
         insertAlbumDirectory.close();
-    }
+    }*/
 
 }

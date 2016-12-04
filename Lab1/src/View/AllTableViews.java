@@ -5,10 +5,14 @@
  */
 package View;
 
+import Model.Artist;
+import java.util.ArrayList;
+
 /**
  *
  * @author Niklas
  */
 public interface AllTableViews {
-    
+    public void showTable(ArrayList<? extends Object> theResult);
+
 }

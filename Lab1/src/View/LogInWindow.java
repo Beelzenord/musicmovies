@@ -71,6 +71,7 @@ public class LogInWindow {
                 String password = pwBox.getText();
                 try {
                     cont.transfer(username, password);
+                    cont.initViews();
                 } catch (SQLException ex) {
                     Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -85,7 +86,7 @@ public class LogInWindow {
     public void logToController(Controller controller){
         System.out.println("Login Sceww");
         this.cont = controller;
-        cont.acknowledgeLogIn(this);
+        //cont.acknowledgeLogIn(this);
     }
      public void hide() {
         stage2.close();

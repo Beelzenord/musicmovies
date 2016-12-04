@@ -11,7 +11,7 @@ public class CenterTableView extends TableView{
     private TableColumn director;
     private TableColumn rating;
     ArrayList<TableColumn> tablecolumn;
-    public CenterTableView(Object o) {
+    public CenterTableView() {
         //ArrayList<String> attributeNames = o.getClass();
         
         

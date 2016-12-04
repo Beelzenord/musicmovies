@@ -14,11 +14,11 @@ import java.sql.SQLException;
  */
 public interface InsertGenerator {
     public void addNew(String title, String genre, String ratingAM, Date rDate, String name, String ratingAD, String nationality)throws SQLException ;
-    public void addNewAlbMov(String title, String genre, String rating, Date rDate);
-    public void addNewArtDir(String name, String rating, String nationality);
-    public void addNewADMD();
+    //public void addNewAlbMov(String title, String genre, String rating, Date rDate);
+    //public void addNewArtDir(String name, String rating, String nationality);
+    //public void addNewADMD();
     
-    public void close() throws SQLException;
+    //public void close() throws SQLException;
     
     /*public void addNewMovie(String title, String genre, String rating, Date rDate);
     public void addNewDirector(String name, String rating);

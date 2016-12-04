@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 public class MainView extends VBox {
     private Stage stage;
     private Controller controller;
-    private TableViews artistTableView;
+    private ArtistTableView artistTableView;
     ArrayList<CenterTableView> centerTable;
     
     public MainView(Stage stage, VBox imageBox) {
@@ -39,7 +39,7 @@ public class MainView extends VBox {
         SearchFieldView searchField = new SearchFieldView(controller);
         MenuFieldView menuField = new MenuFieldView(controller);*/
         
-        artistTableView = new TableViews();
+        artistTableView = new ArtistTableView();
         
         
         /*for (int i = 0; i < 10; i++) {

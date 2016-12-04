@@ -23,6 +23,7 @@ public class GetArtists implements QueryGenerator {
     private Connection con;
     private PreparedStatement searchPrep;
     private PreparedStatement searchByAlbumPrep;
+    private PreparedStatement searchByAllPrep;
     
     public GetArtists(Connection con) {
         this.con = con;
@@ -45,6 +46,12 @@ public class GetArtists implements QueryGenerator {
                 + "artistId IN (SELECT artistId FROM T_Artist WHERE "
                 + "name LIKE ?))";
         searchByAlbumPrep = con.prepareStatement(byArtist);
+    }
+    
+    private void createSearchByAllPrep() throws SQLException {
+        String byAll = "SELECT * FROM T_Artist WHERE name = ? "
+                + "AND rating = ? AND nationality = ?";
+        searchByAllPrep = con.prepareStatement(byAll);
     }
     
     
@@ -86,6 +93,32 @@ public class GetArtists implements QueryGenerator {
                 if (searchPrep != null)
                     searchPrep.close();
             }
+        }
+    }
+
+    @Override
+    public ArrayList searchByAll(String search1, String search2, String search3, Date search4) throws SQLException {
+        ResultSet rs = null;
+        try {
+            createSearchByAllPrep();
+            searchByAllPrep.setString(1, search1);
+            searchByAllPrep.setString(2, search2);
+            searchByAllPrep.setString(3, search3);
+            rs = searchByAllPrep.executeQuery();
+            ArrayList<Artist> tmp = new ArrayList();
+            while (rs.next()) {
+                tmp.add(new Artist(rs.getInt("artistId"), rs.getString("name"), 
+                        rs.getString("rating"), rs.getString("nationality")));
+            }
+            if (tmp.size() > 0)
+                return tmp;
+            else
+                return null;
+        } finally {
+            if (rs != null)
+                rs.close();
+            if (searchByAllPrep != null)
+                searchByAllPrep.close();
         }
     }
 

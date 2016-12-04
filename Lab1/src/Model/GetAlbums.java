@@ -1,8 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
 package Model;
 
 import java.sql.Connection;
@@ -23,7 +23,8 @@ public class GetAlbums implements QueryGenerator{
     private Connection con;
     private PreparedStatement searchPrep;
     private PreparedStatement searchByArtistPrep;
-
+    private PreparedStatement searchByAllPrep;
+    
     public GetAlbums(Connection con) {
         this.con = con;
     }
@@ -49,10 +50,15 @@ public class GetAlbums implements QueryGenerator{
         searchByArtistPrep = con.prepareStatement(byArtist);
     }
     
+    private void createSearchByAllPrep() throws SQLException {
+        String byAll = "SELECT * FROM T_Album WHERE title = ? "
+                + "AND genre = ? AND rating = ? AND releaseDate = ?";
+        searchByAllPrep = con.prepareStatement(byAll);
+    }
+    
     @Override
     public ArrayList<Album> search(String searchBy, String searchWord) throws SQLException {
         ResultSet rs = null;
-        System.out.println("a");
         if (searchBy.equals("artist")) {
             try {
                 createSearchByArtistPrep();
@@ -60,8 +66,8 @@ public class GetAlbums implements QueryGenerator{
                 rs = searchByArtistPrep.executeQuery();
                 ArrayList<Album> tmp = new ArrayList();
                 while (rs.next()) {
-                    tmp.add(new Album(rs.getInt("albumId"), rs.getString("title"), rs.getString("genre"), 
-                        rs.getString("rating"), rs.getDate("releaseDate")));
+                    tmp.add(new Album(rs.getInt("albumId"), rs.getString("title"), rs.getString("genre"),
+                            rs.getString("rating"), rs.getDate("releaseDate")));
                 }
                 return tmp;
             } finally {
@@ -79,8 +85,8 @@ public class GetAlbums implements QueryGenerator{
                 rs = searchPrep.executeQuery();
                 ArrayList<Album> tmp = new ArrayList();
                 while (rs.next()) {
-                    tmp.add(new Album(rs.getInt("albumId"), rs.getString("title"), rs.getString("genre"), 
-                        rs.getString("rating"), rs.getDate("releaseDate")));
+                    tmp.add(new Album(rs.getInt("albumId"), rs.getString("title"), rs.getString("genre"),
+                            rs.getString("rating"), rs.getDate("releaseDate")));
                 }
                 return tmp;
             }  finally {
@@ -89,6 +95,33 @@ public class GetAlbums implements QueryGenerator{
                 if (searchPrep != null)
                     searchPrep.close();
             }
+        }
+    }
+    
+    @Override
+    public ArrayList searchByAll(String search1, String search2, String search3, Date search4) throws SQLException {
+        ResultSet rs = null;
+        try {
+            createSearchByAllPrep();
+            searchByAllPrep.setString(1, search1);
+            searchByAllPrep.setString(2, search2);
+            searchByAllPrep.setString(3, search3);
+            searchByAllPrep.setDate(4, search4);
+            rs = searchByAllPrep.executeQuery();
+            ArrayList<Album> tmp = new ArrayList();
+            while (rs.next()) {
+                tmp.add(new Album(rs.getInt("albumId"), rs.getString("title"), rs.getString("genre"),
+                        rs.getString("rating"), rs.getDate("releaseDate")));
+            }
+            if (tmp.size() > 0)
+                return tmp;
+            else
+                return null;
+        } finally {
+            if (rs != null)
+                rs.close();
+            if (searchPrep != null)
+                searchPrep.close();
         }
     }
     

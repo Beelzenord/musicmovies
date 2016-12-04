@@ -3,18 +3,31 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/Model/QueryExecutor.java</file>
-            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/View/View.java</file>
-            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/Model/Album.java</file>
             <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/SQLfiles/CreateMediaLibrary.sql</file>
             <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/Model/Model.java</file>
-            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/lab1/Main.java</file>
-            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/lab1/Lab1.java</file>
-            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/Model/Movie.java</file>
+            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/View/AllTableViews.java</file>
+            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/Model/GetAlbums.java</file>
+            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/Model/Director.java</file>
             <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/Model/DBQueries.java</file>
             <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/View/CenterTableView.java</file>
+            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/Model/InsertGenerator.java</file>
+            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/Model/GetDirectors.java</file>
+            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/Model/GetArtists.java</file>
+            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/Model/QueryGenerator.java</file>
+            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/View/View.java</file>
+            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/Model/Album.java</file>
+            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/Model/GetMovies.java</file>
+            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/lab1/Main.java</file>
+            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/Model/AddNewMovDir.java</file>
+            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/lab1/Lab1.java</file>
+            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/Model/Movie.java</file>
+            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/Model/AddNewAlbArt.java</file>
+            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/View/MainView.java</file>
             <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/View/Test.java</file>
+            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/Model/User.java</file>
             <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/Controller/Controller.java</file>
+            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/View/LogInWindow.java</file>
+            <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/View/TableViews.java</file>
             <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/Model/Artist.java</file>
             <file>file:/D:/Programs/Dropbox/kth/Databas/github/musicmovies/Lab1/src/View/TopHboxView.java</file>
         </group>
