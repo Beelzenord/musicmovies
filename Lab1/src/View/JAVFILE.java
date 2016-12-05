@@ -27,7 +27,7 @@ import javafx.stage.Stage;
  *
  * @author Niklas
  */
-public class AddNewAlbArtView extends Stage {
+public class JAVFILE extends Stage {
     private Controller controller;
     
     private Label titleL;
