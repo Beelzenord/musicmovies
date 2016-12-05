@@ -23,7 +23,7 @@ public class AddNewUser implements InsertGenerator{
     private int artistPKEY;
     private String name;
     private String pass;
-    private Model model;
+ 
     private String test;
     public AddNewUser(String name, String pass,Connection con) throws SQLException{
        // initPreparedStatements();

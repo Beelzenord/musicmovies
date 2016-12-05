@@ -38,13 +38,15 @@ public class LogInWindow {
     private Button establishNewProfile;
     private TextField newUserName;
     private TextField newPassword;
+    private Button newProfileButton;
     private String Uname;
     private String Pass;
     public LogInWindow(){
         initLoginWindow();
     }
     private void initLoginWindow(){
-         grid = new GridPane();
+// newProfileButton();
+        grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
@@ -54,7 +56,7 @@ public class LogInWindow {
         grid.add(scenetitle, 0, 0, 2, 1);
         Label userName = new Label("User Name:");
         grid.add(userName, 0, 1);
-
+    
         TextField theUserName = new TextField();
         grid.add(theUserName, 1, 1);
         
@@ -67,9 +69,10 @@ public class LogInWindow {
         Button btn2 = new Button("Sign in");
         HBox hbBtn = new HBox(10);
         hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
-        hbBtn.getChildren().add(btn2);
+        newProfileButton = new Button("Create New Profile");
+        hbBtn.getChildren().addAll(btn2,newProfileButton);
+        newProfileButton();
         grid.add(hbBtn, 1, 4);
-        
         btn2.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -120,6 +123,19 @@ public class LogInWindow {
         stage3.setScene(scene3);
         stage3.show();
      }
+     public void newProfileButton(){
+         newProfileButton.setOnAction(new EventHandler<ActionEvent>() {
+             @Override
+             public void handle(ActionEvent event) {
+                 System.out.println("Closer to the sdge");
+                 newProfileWindow();
+                 
+             }
+             
+         });
+     }
+     
+    
     private void officiateNewProfile(){
          establishNewProfile.setOnAction(new EventHandler<ActionEvent>() {
              @Override
