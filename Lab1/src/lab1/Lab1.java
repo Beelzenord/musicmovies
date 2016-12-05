@@ -5,7 +5,6 @@
  */
 package lab1;
 
-import View.Test;
 import javafx.application.Application;
 import javafx.application.Platform;
 

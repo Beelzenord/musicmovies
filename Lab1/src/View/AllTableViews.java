@@ -5,7 +5,6 @@
  */
 package View;
 
-import Model.Artist;
 import java.util.ArrayList;
 
 /**

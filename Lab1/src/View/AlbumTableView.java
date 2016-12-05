@@ -58,9 +58,9 @@ public class AlbumTableView extends TableView implements AllTableViews{
     
     @Override
     public void showTable(ArrayList<? extends Object> theResult) {
-        ObservableList<Album> tmpObvBooks;
-        tmpObvBooks = FXCollections.observableArrayList((ArrayList<Album>) theResult);
-        this.setItems(tmpObvBooks);
+        ObservableList<Album> tmpObv;
+        tmpObv = FXCollections.observableArrayList((ArrayList<Album>) theResult);
+        this.setItems(tmpObv);
     }
     
     @Override

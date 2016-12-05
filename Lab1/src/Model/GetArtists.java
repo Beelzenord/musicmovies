@@ -142,15 +142,10 @@ public class GetArtists implements QueryGenerator {
     private ArrayList<String> searchByPkey(int pKey) throws SQLException {
         ResultSet rs = null;
         try {
-            System.out.println("a");
             createSearchByPkeyPrep();
-            System.out.println("b");
             searchByPkeyPrep.clearParameters();
-            System.out.println("c");
             searchByPkeyPrep.setInt(1, pKey);
-            System.out.println("d");
             rs = searchByPkeyPrep.executeQuery();
-            System.out.println("e");
             ArrayList<String> tmp = new ArrayList();
             while (rs.next()) {
                 tmp.add(rs.getString("title"));

@@ -101,13 +101,9 @@ public class GetAlbums implements QueryGenerator{
                 rs = searchPrep.executeQuery();
                 ArrayList<Album> tmp = new ArrayList();
                 while (rs.next()) {
-                    System.out.println("aaa");
                     ArrayList<String> tmp3 = searchByPkey(rs.getInt(1));
-                    System.out.println("ttt");
                     tmp.add(new Album(rs.getInt("albumId"), rs.getString("title"), rs.getString("genre"),
                             rs.getString("rating"), rs.getDate("releaseDate"), tmp3));
-                    System.out.println("eee");
-                    System.out.println(tmp.get(0).toString());
                 }
                 return tmp;
             }  finally {

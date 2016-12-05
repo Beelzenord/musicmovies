@@ -106,8 +106,6 @@ public class AddNewAlbArt implements InsertGenerator {
             
             try {
                 createInsertAlbumDirectoryPrep();
-                System.out.println("arPKEY" + artistPKEY);
-                System.out.println("alPKEY" + albumPKEY);
                 insertAlbumDirectory.setInt(1, artistPKEY);
                 insertAlbumDirectory.setInt(2, albumPKEY);
                 insertAlbumDirectory.executeUpdate();

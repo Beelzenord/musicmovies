@@ -47,7 +47,7 @@ public class ArtistTableView extends TableView implements AllTableViews {
             new PropertyValueFactory<Artist, String>("nationality"));
         album.setCellValueFactory(
             new PropertyValueFactory<Artist, ArrayList<String>>("albums"));
-        System.out.println("INITIATED");
+        System.out.println("IART");
     }    
     
     @Override

@@ -60,8 +60,9 @@ public class View {
         
         scenes = new ArrayList();
         bPanes = new ArrayList();
-        artistTableView = new ArtistTableView();
         albumTableView = new AlbumTableView();
+        artistTableView = new ArtistTableView();
+        
         this.model = model;
         initScenes();
         //bPane = new BorderPane();
@@ -84,6 +85,7 @@ public class View {
     }
     
     public void startMainView(){
+        
         System.out.println("Liquid");
         cView = new CenterTableView();
         hBoxes = new ArrayList();
@@ -102,13 +104,13 @@ public class View {
             bPanes.get(i).setTop(hBoxes.get(i));
             bPanes.get(i).setBottom(botBoxes.get(i));
         }
+        cont.connectViews(albumTableView, artistTableView);
     }
    
    
     public void ControllerHook(Controller controller){
         cont = controller;
         lW.logToController(controller);
-        cont.connectViews(artistTableView, albumTableView);
         System.out.println("hooked to controller");
     }
     

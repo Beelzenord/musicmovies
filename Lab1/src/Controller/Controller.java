@@ -7,10 +7,6 @@ package Controller;
 
 import Model.AddNewAlbArt;
 import Model.AddNewMovDir;
-import Model.Album;
-import Model.DBQueries;
-import Model.Artist;
-import Model.Director;
 import Model.GetAlbums;
 import Model.GetArtists;
 import Model.GetDirectors;
@@ -20,12 +16,9 @@ import Model.Movie;
 import Model.QueryGenerator;
 import Model.InsertGenerator;
 import View.AddNewAlbArtView;
-import View.AlbumTableView;
 import View.AlertView;
 import View.AllTableViews;
-import View.ArtistTableView;
 import View.View;
-import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -39,12 +32,9 @@ import javafx.application.Platform;
  * @author Niklas
  */
 public class Controller {
-    private ArrayList<DBQueries> artists;
     private ArrayList<QueryGenerator> theQueries;
     private ArrayList<InsertGenerator> theInserts;
     private ArrayList<AllTableViews> theTables;
-    //private ArtistTableView artistTableView;
-    //private AlbumTableView albumTableView;
     private AddNewAlbArtView addNewAlbArtView;
     private AlertView alertView;
     private Model model;
@@ -56,9 +46,9 @@ public class Controller {
     
     
     public Controller(Model model, View view) {
-        artists = new ArrayList();
         theQueries = new ArrayList();
         theInserts = new ArrayList();
+        theTables = new ArrayList();
         this.alertView = new AlertView();
         queryIndex = 0;
         insertIndex = 0;
@@ -76,12 +66,10 @@ public class Controller {
         //theQueries.add(new GetDirectors(model.getMyConn()));
         theInserts.add(new AddNewAlbArt(model.getMyConn()));
         /*theInserts.add(new AddNewMovDir(model.getMyConn()));*/
-        //insertAlbum();
     }
     
-    public void connectViews(AllTableViews artw, AllTableViews altw) {
+    public void connectViews(AllTableViews altw, AllTableViews artw) {
         System.out.println("CONNECTED VIEWS");
-        theTables = new ArrayList();
         theTables.add(altw);
         theTables.add(artw);
         
@@ -98,6 +86,7 @@ public class Controller {
     }
     
     public void initViews() {
+        System.out.println("initViews");
         view.startMainView();
     }
     
@@ -120,16 +109,12 @@ public class Controller {
         new Thread() {
             public void run() {
                 try {
-                    System.out.println("1");
-                    ArrayList asd = theQueries.get(queryIndex).search(searchBy, searchWord);
-                    System.out.println("2");
+                    ArrayList tmp = theQueries.get(queryIndex).search(searchBy, searchWord);
                     Platform.runLater(
                             new Runnable() {
                                 public void run() {
                                     //UPDATE VIEW
-                                    System.out.println("3");
-                                    theTables.get(queryIndex).showTable(asd);
-                                    System.out.println("4");
+                                    theTables.get(queryIndex).showTable(tmp);
                                     view.changeScene(queryIndex);
                                 }
                             });
@@ -202,7 +187,6 @@ public class Controller {
         int r2 = 0;
         
         for (int i = 0; i < 9; i++) {
-            System.out.println(tmp.get(i));
             if (tmp.get(i).length() <= 0) {
                 addNewAlbArtView.setRedLabels(i);
                 error = true;
@@ -287,55 +271,5 @@ public class Controller {
         }
     }
     
-   
-    
-    /*** ADD ALBUM AND ARTIST ***/
-    public void insertAlbum() {
-        System.out.println("\ninsertAlbum");
-        String title = "secondalbumname";
-        String genre = "firstrock";
-        String rating = "9";
-        Date rDate = new Date(97, 10, 23);
-        
-        artists.get(0).addNewAlbum(title, genre, rating, rDate);
-    }
-    
-    public void insertArtist() {
-        System.out.println("\ninsertArtist");
-        String name = "firstartistname";
-        String rating = "3";
-        artists.get(0).addNewArtist(name, rating);
-    }
-    
-    public void insertAlbumDirectory() {
-        System.out.println("\ninsertAlbumDirectory");
-        artists.get(0).addNewAlbumDirectory();
-    }
-    
-    /*** ADD MOVIE AND DIRECTOR ***/
-    public void insertMovie() {
-        System.out.println("\ninsertMovie");
-        String title = "yes";
-        String genre = "works";
-        String rating = "6";
-        Date rDate = new Date(97, 10, 23);
-        
-        artists.get(0).addNewMovie(title, genre, rating, rDate);
-    }
-    
-    public void insertDirector() {
-        System.out.println("\ninsertDirector");
-        String name = "Mel";
-        String rating = "5";
-        artists.get(0).addNewDirector(name, rating);
-    }
-    
-    public void insertMovieDirectory() {
-        System.out.println("\ninsertMovieDirectory");
-        artists.get(0).addNewMovieDirectory();
-    }
-
-
-
 }
 
