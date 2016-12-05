@@ -1,7 +1,6 @@
 
 package View;
 import Controller.Controller;
-import java.io.IOException;
 import javafx.event.ActionEvent;
 
 import javafx.geometry.Insets;
@@ -17,7 +16,6 @@ public class TopHboxView extends HBox{
     private ComboBox<String> searchFor;
     private ComboBox<String> searchHow;
     private Button searchButton;
-    private Button okButton;
     
     public TopHboxView(Controller controller) {
         super(30);
@@ -133,7 +131,7 @@ public class TopHboxView extends HBox{
     
     private void addHandlers() {
         searchButton.setOnAction((ActionEvent event) -> {
-            controller.setIndex(generateIndex());
+            controller.setQueryIndex(generateIndex());
             String searchBy = getSearchHowText();
             String searchWord = "";
             searchWord += getSearched();

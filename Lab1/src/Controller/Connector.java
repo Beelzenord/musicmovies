@@ -1,5 +1,5 @@
 
-package Model;
+package Controller;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,15 +11,15 @@ import java.sql.Statement;
  *
  * @author fauzianordlund
  */
-public class Model {
-    Connection myConn = null;
-    Statement myStmt = null;
-    ResultSet myRs = null;
-    String user;
-    String pass;
-    public Model(){
-        
+public class Connector {
+        Connection myConn = null;
+        Statement myStmt = null;
+        ResultSet myRs = null;
+        String user;
+        String pass;
+        public Connector(){
     }
+    
     public boolean validateUserIdentity(String userName, String passWord) throws SQLException{
         System.out.println("UserName: " + userName + ", " + "password: " + passWord);
         this.user = userName;

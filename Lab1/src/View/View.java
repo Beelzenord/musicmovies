@@ -1,7 +1,7 @@
 
 package View;
 import Controller.Controller;
-import Model.Model;
+import Controller.Connector;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ import javafx.stage.Stage;
  */
 public class View {
    
-    private Model model;
+    private Connector model;
     private BorderPane bPane;
     private StackPane sPane2;
     private Scene scene;
@@ -42,6 +42,8 @@ public class View {
     private Stage stage2;
     private ArtistTableView artistTableView;
     private AlbumTableView albumTableView;
+    private MovieTableView movieTableView;
+    private DirectorTableView directorTableView;
     private GridPane grid;
     private Stage stage;
     
@@ -54,7 +56,7 @@ public class View {
     private ArrayList<BotHboxView> botBoxes;
     
     private LogInWindow lW;
-    public View(Stage stage, Model model){
+    public View(Stage stage, Connector model){
         
         this.stage = stage;
         
@@ -62,6 +64,8 @@ public class View {
         bPanes = new ArrayList();
         albumTableView = new AlbumTableView();
         artistTableView = new ArtistTableView();
+        movieTableView = new MovieTableView();
+        directorTableView = new DirectorTableView();
         
         this.model = model;
         initScenes();
@@ -69,7 +73,7 @@ public class View {
         //scene = new Scene(bPane,400, 500);
 
         lW = new LogInWindow();
-        this.stage.setTitle("musicMovies");
+        this.stage.setTitle("kTunes - Media Library");
         this.stage.setScene(scenes.get(0));
         this.stage.show();
         saveBeforeQuit();
@@ -77,7 +81,7 @@ public class View {
     
     private void initScenes() {
         
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 4; i++) {
             bPanes.add(new BorderPane());
             scenes.add(new Scene(bPanes.get(i), 800, 500));
             
@@ -94,17 +98,21 @@ public class View {
         
        // bPane.getChildren().addAll(cView);
         //bPane.setCenter(artistTableView);
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 4; i++) {
             hBoxes.add(new TopHboxView(cont));
             botBoxes.add(new BotHboxView(cont));
             if (i == 0)
                 bPanes.get(i).setCenter(albumTableView);
             else if (i == 1)
                 bPanes.get(i).setCenter(artistTableView);
+            else if (i == 2)
+                bPanes.get(i).setCenter(movieTableView);
+            else if (i == 3)
+                bPanes.get(i).setCenter(directorTableView);
             bPanes.get(i).setTop(hBoxes.get(i));
             bPanes.get(i).setBottom(botBoxes.get(i));
         }
-        cont.connectViews(albumTableView, artistTableView);
+        cont.connectViews(albumTableView, artistTableView, movieTableView, directorTableView);
     }
    
    

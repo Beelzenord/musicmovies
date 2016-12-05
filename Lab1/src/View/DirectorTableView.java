@@ -5,7 +5,7 @@
  */
 package View;
 
-import Model.Artist;
+import Model.Director;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,13 +17,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
  *
  * @author Niklas
  */
-public class ArtistTableView extends TableView implements AllTableViews {
+public class DirectorTableView extends TableView implements AllTableViews {
     private TableColumn name;
     private TableColumn rating;
     private TableColumn nationality;
-    private TableColumn album;
+    private TableColumn movie;
 
-    public ArtistTableView() {
+    public DirectorTableView() {
         initView();
     }
     
@@ -35,39 +35,38 @@ public class ArtistTableView extends TableView implements AllTableViews {
         rating.setMinWidth(80);
         nationality = new TableColumn("Nationality");
         nationality.setMinWidth(80);
-        album = new TableColumn("Albums");
-        album.setMinWidth(120);
+        movie = new TableColumn("Movies");
+        movie.setMinWidth(120);
         
-        this.getColumns().addAll(name, rating, nationality, album);
+        this.getColumns().addAll(name, rating, nationality, movie);
         name.setCellValueFactory(
-            new PropertyValueFactory<Artist, String>("name"));
+            new PropertyValueFactory<Director, String>("name"));
         rating.setCellValueFactory(
-            new PropertyValueFactory<Artist, String>("rating"));
+            new PropertyValueFactory<Director, String>("rating"));
         nationality.setCellValueFactory(
-            new PropertyValueFactory<Artist, String>("nationality"));
-        album.setCellValueFactory(
-            new PropertyValueFactory<Artist, ArrayList<String>>("albums"));
+            new PropertyValueFactory<Director, String>("nationality"));
+        movie.setCellValueFactory(
+            new PropertyValueFactory<Director, ArrayList<String>>("movies"));
         System.out.println("IART");
     }    
     
     @Override
     public void showTable(ArrayList<? extends Object> theResult) {
-        ObservableList<Artist> tmpObvBooks;
-        tmpObvBooks = FXCollections.observableArrayList((ArrayList<Artist>) theResult);
+        ObservableList<Director> tmpObvBooks;
+        tmpObvBooks = FXCollections.observableArrayList((ArrayList<Director>) theResult);
         this.setItems(tmpObvBooks);
     }
     
     @Override
     public int userRating() {
-        ObservableList<Artist> selectedAritst;
+        ObservableList<Director> selectedAritst;
 
         selectedAritst = this.getSelectionModel().getSelectedItems();
-        ArrayList<Artist> tmp = new ArrayList();
-        for (Artist b : selectedAritst) {
+        ArrayList<Director> tmp = new ArrayList();
+        for (Director b : selectedAritst) {
             tmp.add(b);
-            return tmp.get(0).getArtistId();
+            return tmp.get(0).getDirectorId();
         }
         return -1;
     }
-    
 }

@@ -11,7 +11,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
 /**
@@ -75,12 +74,12 @@ public class BotHboxView extends HBox{
     private void addHandlers() {
         addAlbumArtist.setOnAction((ActionEvent event) -> {
             controller.setIndexMov(0);
-            controller.addNew();
+            controller.addNewAlbArt();
         });
         
         addMovieDirector.setOnAction((ActionEvent event) -> {
             controller.setIndexMov(1);
-            controller.addNew();
+            controller.addNewMovDir();
         });
         
         rate.setOnAction((ActionEvent event) -> {

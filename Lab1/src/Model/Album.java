@@ -84,15 +84,6 @@ public class Album {
         }
         return tmp;
     }
-    
-    public ArrayList<String> getAttributeNames() {
-        ArrayList<String> tmp = new ArrayList();
-        tmp.add("title");
-        tmp.add("genre");
-        tmp.add("rating");
-        tmp.add("releaseDate");
-        return tmp;
-    }
 
     @Override
     public String toString() {

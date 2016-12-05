@@ -6,32 +6,43 @@
 package Model;
 
 import java.sql.Date;
+import java.util.ArrayList;
 
 /**
  *
  * @author Niklas
  */
 public class Movie {
-    private int albumId;
+    private int movieId;
     private String title;
     private String genre;
     private String rating;
     private Date releaseDate;
-
-    public Movie(int albumId, String title, String genre, String rating, Date releaseDate) {
-        this.albumId = albumId;
+    private ArrayList<String> directors;
+    
+    public Movie(int movieId, String title, String genre, String rating, Date releaseDate, ArrayList<String> directors) {
+        this.movieId = movieId;
+        this.title = title;
+        this.genre = genre;
+        this.rating = rating;
+        this.releaseDate = releaseDate;
+        this.directors = new ArrayList();
+        for (String s : directors)
+            this.directors.add(s);
+    }
+    public Movie(String title, String genre, String rating, Date releaseDate) {
         this.title = title;
         this.genre = genre;
         this.rating = rating;
         this.releaseDate = releaseDate;
     }
 
-    public int getAlbumId() {
-        return albumId;
+    public int getMovieId() {
+        return movieId;
     }
 
-    public void setAlbumId(int albumId) {
-        this.albumId = albumId;
+    public void setMovieId(int movieId) {
+        this.movieId = movieId;
     }
 
     public String getTitle() {
@@ -65,10 +76,19 @@ public class Movie {
     public void setReleaseDate(Date releaseDate) {
         this.releaseDate = releaseDate;
     }
+    
+    public String getDirectors() {
+        String tmp = new String("");
+        for (String s : directors) {
+            tmp += s + ", ";
+        }
+        return tmp;
+    }
 
     @Override
     public String toString() {
-        return "Movie{" + "title=" + title + ", genre=" + genre + ", rating=" + rating + ", releaseDate=" + releaseDate + '}';
+        return "Movie{" + "title=" + title + ", genre=" + genre 
+            + ", rating=" + rating + ", releaseDate=" + releaseDate + '}';
     }
     
     

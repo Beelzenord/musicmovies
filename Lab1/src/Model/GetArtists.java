@@ -10,10 +10,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -74,40 +71,60 @@ public class GetArtists implements QueryGenerator {
         ResultSet rs = null;
         if (searchBy.equals("album")) {
             try {
-                createSearchByAlbumPrep();
-                searchByAlbumPrep.setString(1, "%" + searchWord + "%");
-                rs = searchByAlbumPrep.executeQuery();
-                ArrayList<Artist> tmp = new ArrayList();
-                while (rs.next()) {
-                    ArrayList<String> tmp3 = searchByPkey(rs.getInt(1));
-                    tmp.add(new Artist(rs.getInt(1), rs.getString("name"), 
-                            rs.getString("rating"), rs.getString("nationality"), tmp3));
+                con.setAutoCommit(false);
+                try {
+                    createSearchByAlbumPrep();
+                    searchByAlbumPrep.setString(1, "%" + searchWord + "%");
+                    rs = searchByAlbumPrep.executeQuery();
+                    ArrayList<Artist> tmp = new ArrayList();
+                    while (rs.next()) {
+                        ArrayList<String> tmp3 = searchByPkey(rs.getInt(1));
+                        tmp.add(new Artist(rs.getInt(1), rs.getString("name"),
+                                rs.getString("rating"), rs.getString("nationality"), tmp3));
+                    }
+                    con.commit();
+                    return tmp;
+                } finally {
+                    if (rs != null)
+                        rs.close();
+                    if (searchByAlbumPrep != null)
+                        searchByAlbumPrep.close();
                 }
-                return tmp;
+            } catch (SQLException ex) {
+                if (con != null)
+                    con.rollback();
+                throw ex;
             } finally {
-                if (rs != null)
-                    rs.close();
-                if (searchByAlbumPrep != null)
-                    searchByAlbumPrep.close();
+                con.setAutoCommit(true);
             }
         }
         else {
             try {
-                createSearchPrep(searchBy);
-                searchPrep.setString(1, "%" + searchWord + "%");
-                rs = searchPrep.executeQuery();
-                ArrayList<Artist> tmp = new ArrayList();
-                while (rs.next()) {
-                    ArrayList<String> tmp3 = searchByPkey(rs.getInt(1));
-                    tmp.add(new Artist(rs.getInt(1), rs.getString("name"), 
-                            rs.getString("rating"), rs.getString("nationality"), tmp3));
+                con.setAutoCommit(false);
+                try {
+                    createSearchPrep(searchBy);
+                    searchPrep.setString(1, "%" + searchWord + "%");
+                    rs = searchPrep.executeQuery();
+                    ArrayList<Artist> tmp = new ArrayList();
+                    while (rs.next()) {
+                        ArrayList<String> tmp3 = searchByPkey(rs.getInt(1));
+                        tmp.add(new Artist(rs.getInt(1), rs.getString("name"), 
+                                rs.getString("rating"), rs.getString("nationality"), tmp3));
+                    }
+                    con.commit();
+                    return tmp;
+                } finally {
+                    if (rs != null)
+                        rs.close();
+                    if (searchPrep != null)
+                        searchPrep.close();
                 }
-                return tmp;
+            } catch (SQLException ex) {
+                if (con != null)
+                    con.rollback();
+                throw ex;
             } finally {
-                if (rs != null)
-                    rs.close();
-                if (searchPrep != null)
-                    searchPrep.close();
+                con.setAutoCommit(true);
             }
         }
     }
@@ -116,26 +133,36 @@ public class GetArtists implements QueryGenerator {
     public ArrayList searchByAll(String search1, String search2, String search3, Date search4) throws SQLException {
         ResultSet rs = null;
         try {
-            createSearchByAllPrep();
-            searchByAllPrep.setString(1, search1);
-            searchByAllPrep.setString(2, search2);
-            searchByAllPrep.setString(3, search3);
-            rs = searchByAllPrep.executeQuery();
-            ArrayList<Artist> tmp = new ArrayList();
-            while (rs.next()) {
-                    ArrayList<String> tmp3 = searchByPkey(rs.getInt(1));
-                    tmp.add(new Artist(rs.getInt(1), rs.getString("name"), 
-                            rs.getString("rating"), rs.getString("nationality"), tmp3));
+            con.setAutoCommit(false);
+            try {
+                createSearchByAllPrep();
+                searchByAllPrep.setString(1, search1);
+                searchByAllPrep.setString(2, search2);
+                searchByAllPrep.setString(3, search3);
+                rs = searchByAllPrep.executeQuery();
+                ArrayList<Artist> tmp = new ArrayList();
+                while (rs.next()) {
+                        ArrayList<String> tmp3 = searchByPkey(rs.getInt(1));
+                        tmp.add(new Artist(rs.getInt(1), rs.getString("name"), 
+                                rs.getString("rating"), rs.getString("nationality"), tmp3));
+                }
+                con.commit();
+                if (tmp.size() > 0)
+                    return tmp;
+                else
+                    return null;
+            } finally {
+                if (rs != null)
+                    rs.close();
+                if (searchByAllPrep != null)
+                    searchByAllPrep.close();
             }
-            if (tmp.size() > 0)
-                return tmp;
-            else
-                return null;
+        } catch (SQLException ex) {
+            if (con != null)
+                con.rollback();
+            throw ex;
         } finally {
-            if (rs != null)
-                rs.close();
-            if (searchByAllPrep != null)
-                searchByAllPrep.close();
+            con.setAutoCommit(true);
         }
     }
     
@@ -160,10 +187,10 @@ public class GetArtists implements QueryGenerator {
     }
 
     @Override
-    public void updateRating(int primaryKey, String searchWord) throws SQLException {
+    public void updateRating(int primaryKey, String rating) throws SQLException {
         try {
             createUpdateRatingPrep();
-            updateRatingPrep.setString(1, searchWord);
+            updateRatingPrep.setString(1, rating);
             updateRatingPrep.setInt(2, primaryKey);
             updateRatingPrep.executeUpdate();
         } finally {
@@ -171,5 +198,4 @@ public class GetArtists implements QueryGenerator {
                 updateRatingPrep.close();
         }
     }
-
 }

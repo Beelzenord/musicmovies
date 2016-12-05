@@ -1,7 +1,7 @@
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import Model.Model;
+import Controller.Connector;
 import View.View;
 import Controller.Controller;
 import java.sql.SQLException;
@@ -14,7 +14,7 @@ public class Main extends Application {
     
     @Override
     public void start(Stage primaryStage) throws SQLException {
-       Model model = new Model();
+       Connector model = new Connector();
        View view  = new View(primaryStage, model);
        Controller controller = new Controller(model,view);
        // LogIn logIn = new LogIn();

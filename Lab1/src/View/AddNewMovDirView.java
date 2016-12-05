@@ -27,7 +27,7 @@ import javafx.stage.Stage;
  *
  * @author Niklas
  */
-public class AddNewAlbArtView extends Stage {
+public class AddNewMovDirView extends Stage{
     private Controller controller;
     
     private Label titleL;
@@ -62,7 +62,7 @@ public class AddNewAlbArtView extends Stage {
     private HBox hBox;
     private BorderPane border;
     
-    public AddNewAlbArtView(Controller controller) {
+    public AddNewMovDirView(Controller controller) {
         this.controller = controller;
         initView();
     }
@@ -116,14 +116,14 @@ public class AddNewAlbArtView extends Stage {
         ratingM = new TextField();
         nationality = new TextField();
         
-        title.setPromptText("Album title here");
-        genre.setPromptText("Album genre here");
-        ratingA.setPromptText("Album rating here");
+        title.setPromptText("Movie title here");
+        genre.setPromptText("Movie genre here");
+        ratingA.setPromptText("Movie rating here");
         dateY.setPromptText("Release year (1948-2016)");
         dateM.setPromptText("Release month (1-12)");
         dateD.setPromptText("Release day (1-31)");
-        name.setPromptText("Artist name here");
-        ratingM.setPromptText("Artist rating here");
+        name.setPromptText("Director name here");
+        ratingM.setPromptText("Director rating here");
         nationality.setPromptText("Arting nationality here");
         
         addNew = new Button("Add To Database");
@@ -219,7 +219,7 @@ public class AddNewAlbArtView extends Stage {
         // user can't interact with any other stage
         this.initModality(Modality.APPLICATION_MODAL);
         this.setResizable(true);
-        this.setTitle("Add new Album and Artist");
+        this.setTitle("Add new Movie and Director");
         this.setScene(scene);
         this.show();
     }
@@ -293,11 +293,11 @@ public class AddNewAlbArtView extends Stage {
     
     private void addEventHandlers() {
         addNew.setOnAction((ActionEvent event) -> {
-            controller.handleAddNewArtAlb();
+            controller.handleAddNewMovDir();
         });
         
         cancel.setOnAction((ActionEvent event) -> {
-            controller.handleAddNewArtAlbCancel();
+            controller.handleAddNewMovDirCancel();
         });
     }
 }

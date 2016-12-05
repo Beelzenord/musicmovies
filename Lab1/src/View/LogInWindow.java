@@ -1,6 +1,6 @@
 package View;
 import Controller.Controller;
-import Model.Model;
+import Controller.Connector;
 
 import java.sql.SQLException;
 import java.util.logging.Level;

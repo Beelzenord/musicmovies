@@ -12,8 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -55,9 +53,11 @@ public class AddNewAlbArt implements InsertGenerator {
     @Override
     public void addNew(String title, String genre, String ratingAM, Date rDate, String name, String ratingAD, String nationality) throws SQLException {
         try {
-            con.setAutoCommit(false);
             
+            
+            // only add new album if it doesn't already exist
             ArrayList<Album> tmp1 = new GetAlbums(con).searchByAll(title, genre, ratingAM, rDate);
+            con.setAutoCommit(false);
             if (tmp1 == null) {
                 ResultSet rs = null;
                 try {
@@ -80,8 +80,9 @@ public class AddNewAlbArt implements InsertGenerator {
             else
                 albumPKEY = tmp1.get(0).getAlbumId();
             
-            
+            // only add new artist if it doesn't already exist
             ArrayList<Artist> tmp2 = new GetArtists(con).searchByAll(name, ratingAD, nationality, rDate);
+            con.setAutoCommit(false);
             if (tmp2 == null) {
                 ResultSet rs = null;
                 try {
@@ -104,6 +105,7 @@ public class AddNewAlbArt implements InsertGenerator {
             else
                 artistPKEY = tmp2.get(0).getArtistId();
             
+            // sambandstabell
             try {
                 createInsertAlbumDirectoryPrep();
                 insertAlbumDirectory.setInt(1, artistPKEY);
@@ -118,8 +120,7 @@ public class AddNewAlbArt implements InsertGenerator {
             con.commit();
             
         }catch (SQLException ex) {
-            // show alert message and redo
-            if (con!= null)
+            if (con != null)
                 con.rollback();
             throw ex;
         }

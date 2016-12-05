@@ -5,6 +5,8 @@
  */
 package Model;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Niklas
@@ -14,12 +16,17 @@ public class Director {
     private String name;
     private String rating;
     private String nationality;
-
-    public Director(int directorId, String name, String rating, String nationality) {
+    private ArrayList<String> movies;
+    
+    
+    public Director(int directorId, String name, String rating, String nationality, ArrayList<String> movies) { //
         this.directorId = directorId;
         this.name = name;
         this.rating = rating;
         this.nationality = nationality;
+        this.movies = new ArrayList();
+        for (String s : movies)
+            this.movies.add(s);
     }
 
     public int getDirectorId() {
@@ -53,10 +60,18 @@ public class Director {
     public void setNationality(String nationality) {
         this.nationality = nationality;
     }
+    
+    public String getMovies() {
+        String tmp = new String("");
+        for (String s : movies) {
+            tmp += s + ", ";
+        }
+        return tmp;
+    }
 
     @Override
     public String toString() {
-        return "Director{" + "name=" + name + ", rating=" + rating + ", nationality=" + nationality + '}';
+        return "Director{" + "name=" + name + ", rating=" + rating + ", nationality=" + nationality + ", movies=" + movies + '}';
     }
     
     
