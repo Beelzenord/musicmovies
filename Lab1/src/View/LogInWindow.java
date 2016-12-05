@@ -68,7 +68,8 @@ public class LogInWindow {
                 System.out.println(pwBox.getText());
               //  System.out.print(theUserName.getText());
                 String username = theUserName.getText();
-                String password = pwBox.getText();
+                String password = "";
+                password += pwBox.getText();
                 try {
                     cont.transfer(username, password);
                     cont.initViews();

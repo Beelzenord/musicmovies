@@ -28,6 +28,12 @@ public class GetDirectors implements QueryGenerator {
         this.con = con;
     }
     
+    /** 
+     * Creates a PreparedStatement to search for a director by 
+     * either name, rating or nationality.
+     * @param searchBy How to search the database.
+     * @throws SQLException 
+     */
     private void createSearchPrep(String searchBy) throws SQLException {
         String prepState;
         if (searchBy.equals("name"))
@@ -39,6 +45,10 @@ public class GetDirectors implements QueryGenerator {
         searchPrep = con.prepareStatement(prepState);
     }
     
+    /** 
+     * Creates a PreparedStatement to search for a director by movie.
+     * @throws SQLException 
+     */
     private void createSearchByMoviePrep() throws SQLException {
         String byDirector = "SELECT * FROM T_Director WHERE "
                 + "directorId IN (SELECT directorId FROM T_MovieDirectory WHERE "
@@ -47,12 +57,21 @@ public class GetDirectors implements QueryGenerator {
         searchByMoviePrep = con.prepareStatement(byDirector);
     }
     
+    /** 
+     * Creates a PreparedStatement to search for a director by 
+     * name, rating and nationality.
+     * @throws SQLException 
+     */
     private void createSearchByAllPrep() throws SQLException {
         String byAll = "SELECT * FROM T_Director WHERE name = ? "
                 + "AND rating = ? AND nationality = ?";
         searchByAllPrep = con.prepareStatement(byAll);
     }
     
+    /** Creates a PreparedStatement to search for a movie by 
+     * selected movies primary key.
+     * @throws SQLException 
+     */
     private void createSearchByPkeyPrep() throws SQLException {
         String byKey = "SELECT title FROM T_Movie WHERE movieId IN "
                 + "(SELECT movieId FROM T_MovieDirectory WHERE "
@@ -60,12 +79,23 @@ public class GetDirectors implements QueryGenerator {
         searchByPkeyPrep = con.prepareStatement(byKey);
     }
     
+    /** 
+     * Creates a PreparedStatement to rate a director 
+     * @throws SQLException 
+     */
     private void createUpdateRatingPrep() throws SQLException {
         String updateRating = "UPDATE T_Director SET rating = ? "
                 + "WHERE directorId = ?";
         updateRatingPrep = con.prepareStatement(updateRating);
     }
     
+    /** 
+     * This will search the database and return a list of Directors
+     * @param searchBy How to search the database, by name, rating, nationality, movie
+     * @param searchWord The word the user is search for 
+     * @return An ArrayList<Director> 
+     * @throws SQLException 
+     */
     @Override
     public ArrayList search(String searchBy, String searchWord) throws SQLException {
         ResultSet rs = null;
@@ -129,6 +159,15 @@ public class GetDirectors implements QueryGenerator {
         }
     }
 
+    /** 
+     * This will search the database and return a list of Directors
+     * @param search1 The directors name
+     * @param search2 The directors rating
+     * @param search3 The directors nationality
+     * @param search4 The movies date
+     * @return An ArrayList<Director> 
+     * @throws SQLException 
+     */
     @Override
     public ArrayList searchByAll(String search1, String search2, String search3, Date search4) throws SQLException {
         ResultSet rs = null;
@@ -166,6 +205,13 @@ public class GetDirectors implements QueryGenerator {
         }
     }
     
+    /** 
+     * This will return an arrayList<String> containing all the title
+     * of all the movies who has an movie with that name.
+     * @param pKey The primary key of the director.
+     * @return An ArrayList<String> 
+     * @throws SQLException 
+     */
     private ArrayList<String> searchByPkey(int pKey) throws SQLException {
         ResultSet rs = null;
         try {
@@ -186,6 +232,12 @@ public class GetDirectors implements QueryGenerator {
             }
     }
 
+    /** 
+     * This will update the rating of selected director.
+     * @param primaryKey The primary key of selected director. 
+     * @param rating The new rating for the director.
+     * @throws SQLException 
+     */
     @Override
     public void updateRating(int primaryKey, String rating) throws SQLException {
         try {

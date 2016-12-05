@@ -28,6 +28,11 @@ public class AddNewMovDir implements InsertGenerator {
     public AddNewMovDir(Connection con)  throws SQLException{
         this.con = con;
     }
+    
+    /**
+     * Creates a Prepared statement to insert a new movie into the database
+     * @throws SQLException 
+     */
     private void createInsertMoviePrep() throws SQLException {
         // prepared statement for insert new movie
         String newMovie = "INSERT INTO T_Movie (title, genre, rating, "
@@ -35,6 +40,10 @@ public class AddNewMovDir implements InsertGenerator {
         insertMovie = con.prepareStatement(newMovie, Statement.RETURN_GENERATED_KEYS);
     }
     
+    /**
+     * Creates a Prepared statement to insert a new director into the database
+     * @throws SQLException 
+     */
     private void createInsertDirectorPrep() throws SQLException {
         // prepared statement for insert new director
         String newDirector = "INSERT INTO T_Director (name, rating, nationality)"
@@ -42,6 +51,11 @@ public class AddNewMovDir implements InsertGenerator {
         insertDirector = con.prepareStatement(newDirector, Statement.RETURN_GENERATED_KEYS);
     }
     
+    /**
+     * Creates a Prepared statement to insert the new movie and the 
+     * new director into the connection table 
+     * @throws SQLException 
+     */
     private void createInsertMovieDirectoryPrep() throws SQLException {
         // preparted statement for insert new directorsMovie
         String newMovieDirectory = "INSERT INTO T_MovieDirectory (directorId, movieId)"
@@ -49,14 +63,23 @@ public class AddNewMovDir implements InsertGenerator {
         insertMovieDirectory = con.prepareStatement(newMovieDirectory);
     }
     
-    
+    /**
+     * This will add a new movie and a new director to the database 
+     * @param title The title of the movie
+     * @param genre The genre of the movie
+     * @param ratingAM The rating of the movie
+     * @param rDate The release date of the movie
+     * @param name The name of the director
+     * @param ratingAD The rating of the director
+     * @param nationality The nationality of the director
+     * @throws SQLException 
+     */
     @Override
     public void addNew(String title, String genre, String ratingAM, Date rDate, String name, String ratingAD, String nationality) throws SQLException {
         try {
-            
-            
             // only add new movie if it doesn't already exist
             ArrayList<Movie> tmp1 = new GetMovies(con).searchByAll(title, genre, ratingAM, rDate);
+            
             con.setAutoCommit(false);
             if (tmp1 == null) {
                 ResultSet rs = null;
@@ -82,6 +105,7 @@ public class AddNewMovDir implements InsertGenerator {
             
             // only add new director if it doesn't already exist
             ArrayList<Director> tmp2 = new GetDirectors(con).searchByAll(name, ratingAD, nationality, rDate);
+            
             con.setAutoCommit(false);
             if (tmp2 == null) {
                 ResultSet rs = null;

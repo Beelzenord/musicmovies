@@ -53,7 +53,6 @@ public class MovieTableView extends TableView implements AllTableViews{
             new PropertyValueFactory<Movie, Date>("releaseDate"));
         directors.setCellValueFactory(
             new PropertyValueFactory<Movie, ArrayList<String>>("directors"));
-        System.out.println("INITIATED");
     }    
     
     @Override

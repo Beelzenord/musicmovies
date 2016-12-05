@@ -53,7 +53,6 @@ public class AlbumTableView extends TableView implements AllTableViews{
             new PropertyValueFactory<Album, Date>("releaseDate"));
         artists.setCellValueFactory(
             new PropertyValueFactory<Album, ArrayList<String>>("artists"));
-        System.out.println("INITIATED");
     }    
     
     @Override

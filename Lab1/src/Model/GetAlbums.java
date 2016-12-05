@@ -28,6 +28,12 @@ public class GetAlbums implements QueryGenerator{
         this.con = con;
     }
     
+    /** 
+     * Creates a PreparedStatement to search for an album by 
+     * either title, genre or rating.
+     * @param searchBy How to search the database.
+     * @throws SQLException 
+     */
     private void createSearchPrep(String searchBy) throws SQLException {
         String prepState;
         if (searchBy.equals("title"))
@@ -36,11 +42,13 @@ public class GetAlbums implements QueryGenerator{
             prepState = "SELECT * FROM T_Album WHERE genre LIKE ?;";
         else
             prepState = "SELECT * FROM T_Album WHERE rating LIKE ?;";
-        
-        String as = "SELECT * FROM T_Album WHERE ? LIKE ?";
         searchPrep = con.prepareStatement(prepState);
     }
     
+    /** 
+     * Creates a PreparedStatement to search for an album by artist.
+     * @throws SQLException 
+     */
     private void createSearchByArtistPrep() throws SQLException {
         String byArtist = "SELECT * FROM T_Album WHERE "
                 + "albumId IN (SELECT albumId FROM T_AlbumDirectory WHERE "
@@ -49,12 +57,21 @@ public class GetAlbums implements QueryGenerator{
         searchByArtistPrep = con.prepareStatement(byArtist);
     }
     
+    /** 
+     * Creates a PreparedStatement to search for an album by 
+     * title, genre, rating and release date.
+     * @throws SQLException 
+     */
     private void createSearchByAllPrep() throws SQLException {
         String byAll = "SELECT * FROM T_Album WHERE title = ? "
                 + "AND genre = ? AND rating = ? AND releaseDate = ?";
         searchByAllPrep = con.prepareStatement(byAll);
     }
     
+    /** Creates a PreparedStatement to search for an artist by 
+     * selected albums primary key.
+     * @throws SQLException 
+     */
     private void createSearchByPkeyPrep() throws SQLException {
         String byKey = "SELECT name FROM T_Artist WHERE artistId IN "
                 + "(SELECT artistId FROM T_AlbumDirectory WHERE "
@@ -62,12 +79,23 @@ public class GetAlbums implements QueryGenerator{
         searchByPkeyPrep = con.prepareStatement(byKey);
     }
     
+    /** 
+     * Creates a PreparedStatement to rate an album 
+     * @throws SQLException 
+     */
     private void createUpdateRatingPrep() throws SQLException {
         String updateRating = "UPDATE T_Album SET rating = ? "
                 + "WHERE albumId = ?";
         updateRatingPrep = con.prepareStatement(updateRating);
     }
     
+    /** 
+     * This will search the database and return a list of Albums
+     * @param searchBy How to search the database, by name, genre, rating, artist
+     * @param searchWord The word the user is search for 
+     * @return An ArrayList<Album> 
+     * @throws SQLException 
+     */
     @Override
     public ArrayList<Album> search(String searchBy, String searchWord) throws SQLException {
         ResultSet rs = null;
@@ -134,6 +162,15 @@ public class GetAlbums implements QueryGenerator{
         }
     }
     
+    /** 
+     * This will search the database and return a list of Albums
+     * @param search1 The albums title
+     * @param search2 The albums genre
+     * @param search3 The albums rating
+     * @param search4 The albums date
+     * @return An ArrayList<Album> 
+     * @throws SQLException 
+     */
     @Override
     public ArrayList searchByAll(String search1, String search2, String search3, Date search4) throws SQLException {
         ResultSet rs = null;
@@ -172,11 +209,17 @@ public class GetAlbums implements QueryGenerator{
         }
     }
     
+    /** 
+     * This will return an arrayList<String> containing all the names
+     * of all the artists who has an album with that name.
+     * @param pKey The primary key of the album
+     * @return An ArrayList<String> 
+     * @throws SQLException 
+     */
     private ArrayList<String> searchByPkey(int pKey) throws SQLException {
         ResultSet rs = null;
         try {
             createSearchByPkeyPrep();
-            //searchByPkeyPrep.clearParameters();
             searchByPkeyPrep.setInt(1, pKey);
             rs = searchByPkeyPrep.executeQuery();
             ArrayList<String> tmp = new ArrayList();
@@ -192,6 +235,12 @@ public class GetAlbums implements QueryGenerator{
             }
     }
 
+    /** 
+     * This will update the rating of selected album.
+     * @param primaryKey The primary key of selected album. 
+     * @param rating The new rating for the album.
+     * @throws SQLException 
+     */
     @Override
     public void updateRating(int primaryKey, String rating) throws SQLException {
         try {

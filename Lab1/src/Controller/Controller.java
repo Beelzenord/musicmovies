@@ -23,8 +23,6 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 
 /**
@@ -38,7 +36,7 @@ public class Controller {
     private AddNewAlbArtView addNewAlbArtView;
     private AddNewMovDirView addNewMovDirView;
     private AlertView alertView;
-    private Connector model;
+    private Connector conn;
     private View view;
     private int queryIndex;
     private int insertIndex;
@@ -46,7 +44,7 @@ public class Controller {
     private String lastSearchWord;
     
     
-    public Controller(Connector model, View view) {
+    public Controller(Connector conn, View view) {
         theQueries = new ArrayList();
         theInserts = new ArrayList();
         theTables = new ArrayList();
@@ -55,18 +53,18 @@ public class Controller {
         insertIndex = 0;
         lastSearchBy = "album";
         lastSearchWord = "title";
-        this.model = model;
+        this.conn = conn;
         this.view = view;
         view.ControllerHook(this);
     }
     
     public void systemAccess() throws SQLException {
-        theQueries.add(new GetAlbums(model.getMyConn()));
-        theQueries.add(new GetArtists(model.getMyConn()));
-        theQueries.add(new GetMovies(model.getMyConn()));
-        theQueries.add(new GetDirectors(model.getMyConn()));
-        theInserts.add(new AddNewAlbArt(model.getMyConn()));
-        theInserts.add(new AddNewMovDir(model.getMyConn()));
+        theQueries.add(new GetAlbums(conn.getMyConn()));
+        theQueries.add(new GetArtists(conn.getMyConn()));
+        theQueries.add(new GetMovies(conn.getMyConn()));
+        theQueries.add(new GetDirectors(conn.getMyConn()));
+        theInserts.add(new AddNewAlbArt(conn.getMyConn()));
+        theInserts.add(new AddNewMovDir(conn.getMyConn()));
     }
     
     public void connectViews(AllTableViews altw, AllTableViews artw, AllTableViews motw, AllTableViews ditw) {
@@ -82,7 +80,7 @@ public class Controller {
     }
     
     public void transfer(String userName, String passWord) throws SQLException{
-        if (model.validateUserIdentity(userName,passWord)) {
+        if (conn.validateUserIdentity(userName,passWord)) {
             systemAccess();
         }
     }
@@ -193,7 +191,7 @@ public class Controller {
     
     public void exitProgram() {
         try {
-            model.exitSafetly();
+            conn.exitSafetly();
             view.fullyQuit();
         } catch (SQLException ex) {
             alertView.showAlert("Could not close connection!");
@@ -284,7 +282,6 @@ public class Controller {
                 + "Make sure you enter a valid Date!");
         }
         else {
-            //year,mone -> Date
             Date rDate = new Date(year-1900, month-1, day);
             insertNewItem(tmp.get(0), tmp.get(1), tmp.get(2), rDate, tmp.get(6), tmp.get(7), tmp.get(8));
 
@@ -370,7 +367,6 @@ public class Controller {
                 + "Make sure you enter a valid Date!");
         }
         else {
-            //year,mone -> Date
             Date rDate = new Date(year-1900, month-1, day);
             insertNewItem(tmp.get(0), tmp.get(1), tmp.get(2), rDate, tmp.get(6), tmp.get(7), tmp.get(8));
 

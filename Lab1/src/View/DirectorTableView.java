@@ -47,7 +47,6 @@ public class DirectorTableView extends TableView implements AllTableViews {
             new PropertyValueFactory<Director, String>("nationality"));
         movie.setCellValueFactory(
             new PropertyValueFactory<Director, ArrayList<String>>("movies"));
-        System.out.println("IART");
     }    
     
     @Override

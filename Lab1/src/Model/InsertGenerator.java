@@ -13,5 +13,16 @@ import java.sql.SQLException;
  * @author Niklas
  */
 public interface InsertGenerator {
+    /**
+     * This can be used to insert a new tuple into a database
+     * @param title The title 
+     * @param genre The genre
+     * @param ratingAM The first rating
+     * @param rDate The date
+     * @param name The name
+     * @param ratingAD The second rating
+     * @param nationality The nationality
+     * @throws SQLException 
+     */
     public void addNew(String title, String genre, String ratingAM, Date rDate, String name, String ratingAD, String nationality)throws SQLException ;
 }

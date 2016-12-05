@@ -28,6 +28,12 @@ public class GetArtists implements QueryGenerator {
         this.con = con;
     }
     
+    /** 
+     * Creates a PreparedStatement to search for an artist by 
+     * either name, rating or nationality.
+     * @param searchBy How to search the database.
+     * @throws SQLException 
+     */
     private void createSearchPrep(String searchBy) throws SQLException {
         String prepState;
         if (searchBy.equals("name"))
@@ -39,6 +45,10 @@ public class GetArtists implements QueryGenerator {
         searchPrep = con.prepareStatement(prepState);
     }
     
+    /** 
+     * Creates a PreparedStatement to search for an artist by album.
+     * @throws SQLException 
+     */
     private void createSearchByAlbumPrep() throws SQLException {
         String byArtist = "SELECT * FROM T_Artist WHERE "
                 + "artistId IN (SELECT artistId FROM T_AlbumDirectory WHERE "
@@ -47,12 +57,21 @@ public class GetArtists implements QueryGenerator {
         searchByAlbumPrep = con.prepareStatement(byArtist);
     }
     
+    /** 
+     * Creates a PreparedStatement to search for an artist by 
+     * name, rating and nationality.
+     * @throws SQLException 
+     */
     private void createSearchByAllPrep() throws SQLException {
         String byAll = "SELECT * FROM T_Artist WHERE name = ? "
                 + "AND rating = ? AND nationality = ?";
         searchByAllPrep = con.prepareStatement(byAll);
     }
     
+    /** Creates a PreparedStatement to search for an album by 
+     * selected artists primary key.
+     * @throws SQLException 
+     */
     private void createSearchByPkeyPrep() throws SQLException {
         String byKey = "SELECT title FROM T_Album WHERE albumId IN "
                 + "(SELECT albumId FROM T_AlbumDirectory WHERE "
@@ -60,12 +79,23 @@ public class GetArtists implements QueryGenerator {
         searchByPkeyPrep = con.prepareStatement(byKey);
     }
     
+    /** 
+     * Creates a PreparedStatement to rate an artist 
+     * @throws SQLException 
+     */
     private void createUpdateRatingPrep() throws SQLException {
         String updateRating = "UPDATE T_Artist SET rating = ? "
                 + "WHERE artistId = ?";
         updateRatingPrep = con.prepareStatement(updateRating);
     }
     
+    /** 
+     * This will search the database and return a list of Artists
+     * @param searchBy How to search the database, by name, rating, nationality, album
+     * @param searchWord The word the user is search for 
+     * @return An ArrayList<Artist> 
+     * @throws SQLException 
+     */
     @Override
     public ArrayList search(String searchBy, String searchWord) throws SQLException {
         ResultSet rs = null;
@@ -129,6 +159,15 @@ public class GetArtists implements QueryGenerator {
         }
     }
 
+    /** 
+     * This will search the database and return a list of Artists
+     * @param search1 The artists name
+     * @param search2 The artists rating
+     * @param search3 The artists nationality
+     * @param search4 The albums date
+     * @return An ArrayList<Artist> 
+     * @throws SQLException 
+     */
     @Override
     public ArrayList searchByAll(String search1, String search2, String search3, Date search4) throws SQLException {
         ResultSet rs = null;
@@ -166,6 +205,13 @@ public class GetArtists implements QueryGenerator {
         }
     }
     
+    /** 
+     * This will return an arrayList<String> containing all the title
+     * of all the albums who has an album with that name.
+     * @param pKey The primary key of the artist.
+     * @return An ArrayList<String> 
+     * @throws SQLException 
+     */
     private ArrayList<String> searchByPkey(int pKey) throws SQLException {
         ResultSet rs = null;
         try {
@@ -186,6 +232,12 @@ public class GetArtists implements QueryGenerator {
             }
     }
 
+    /** 
+     * This will update the rating of selected artist.
+     * @param primaryKey The primary key of selected artist. 
+     * @param rating The new rating for the artist.
+     * @throws SQLException 
+     */
     @Override
     public void updateRating(int primaryKey, String rating) throws SQLException {
         try {

@@ -28,6 +28,11 @@ public class AddNewAlbArt implements InsertGenerator {
     public AddNewAlbArt(Connection con)  throws SQLException{
         this.con = con;
     }
+    
+    /**
+     * Creates a Prepared statement to insert a new album into the database
+     * @throws SQLException 
+     */
     private void createInsertAlbumPrep() throws SQLException {
         // prepared statement for insert new album
         String newAlbum = "INSERT INTO T_Album (title, genre, rating, "
@@ -35,6 +40,10 @@ public class AddNewAlbArt implements InsertGenerator {
         insertAlbum = con.prepareStatement(newAlbum, Statement.RETURN_GENERATED_KEYS);
     }
     
+    /**
+     * Creates a Prepared statement to insert a new artist into the database
+     * @throws SQLException 
+     */
     private void createInsertArtistPrep() throws SQLException {
         // prepared statement for insert new artist
         String newArtist = "INSERT INTO T_Artist (name, rating, nationality)"
@@ -42,6 +51,11 @@ public class AddNewAlbArt implements InsertGenerator {
         insertArtist = con.prepareStatement(newArtist, Statement.RETURN_GENERATED_KEYS);
     }
     
+    /**
+     * Creates a Prepared statement to insert the new album and the 
+     * new artist into the connection table 
+     * @throws SQLException 
+     */
     private void createInsertAlbumDirectoryPrep() throws SQLException {
         // preparted statement for insert new artistsAlbum
         String newAlbumDirectory = "INSERT INTO T_AlbumDirectory (artistId, albumId)"
@@ -49,14 +63,23 @@ public class AddNewAlbArt implements InsertGenerator {
         insertAlbumDirectory = con.prepareStatement(newAlbumDirectory);
     }
     
-    
+    /**
+     * This will add a new album and a new artist to the database 
+     * @param title The title of the album
+     * @param genre The genre of the album
+     * @param ratingAM The rating of the album
+     * @param rDate The release date of the album
+     * @param name The name of the artist
+     * @param ratingAD The rating of the artist
+     * @param nationality The nationality of the artist
+     * @throws SQLException 
+     */
     @Override
     public void addNew(String title, String genre, String ratingAM, Date rDate, String name, String ratingAD, String nationality) throws SQLException {
         try {
-            
-            
             // only add new album if it doesn't already exist
             ArrayList<Album> tmp1 = new GetAlbums(con).searchByAll(title, genre, ratingAM, rDate);
+            
             con.setAutoCommit(false);
             if (tmp1 == null) {
                 ResultSet rs = null;
@@ -82,6 +105,7 @@ public class AddNewAlbArt implements InsertGenerator {
             
             // only add new artist if it doesn't already exist
             ArrayList<Artist> tmp2 = new GetArtists(con).searchByAll(name, ratingAD, nationality, rDate);
+            
             con.setAutoCommit(false);
             if (tmp2 == null) {
                 ResultSet rs = null;

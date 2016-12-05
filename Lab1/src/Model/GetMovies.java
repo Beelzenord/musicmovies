@@ -28,6 +28,12 @@ public class GetMovies implements QueryGenerator {
         this.con = con;
     }
     
+    /** 
+     * Creates a PreparedStatement to search for a movie by 
+     * either title, genre or rating.
+     * @param searchBy How to search the database.
+     * @throws SQLException 
+     */
     private void createSearchPrep(String searchBy) throws SQLException {
         String prepState;
         if (searchBy.equals("title"))
@@ -36,11 +42,13 @@ public class GetMovies implements QueryGenerator {
             prepState = "SELECT * FROM T_Movie WHERE genre LIKE ?;";
         else
             prepState = "SELECT * FROM T_Movie WHERE rating LIKE ?;";
-        
-        String as = "SELECT * FROM T_Movie WHERE ? LIKE ?";
         searchPrep = con.prepareStatement(prepState);
     }
     
+    /** 
+     * Creates a PreparedStatement to search for a movie by director.
+     * @throws SQLException 
+     */
     private void createSearchByDirectorPrep() throws SQLException {
         String byDirector = "SELECT * FROM T_Movie WHERE "
                 + "movieId IN (SELECT movieId FROM T_MovieDirectory WHERE "
@@ -49,12 +57,21 @@ public class GetMovies implements QueryGenerator {
         searchByDirectorPrep = con.prepareStatement(byDirector);
     }
     
+    /** 
+     * Creates a PreparedStatement to search for a movie by 
+     * title, genre, rating and release date.
+     * @throws SQLException 
+     */
     private void createSearchByAllPrep() throws SQLException {
         String byAll = "SELECT * FROM T_Movie WHERE title = ? "
                 + "AND genre = ? AND rating = ? AND releaseDate = ?";
         searchByAllPrep = con.prepareStatement(byAll);
     }
     
+    /** Creates a PreparedStatement to search for a director by 
+     * selected movies primary key.
+     * @throws SQLException 
+     */
     private void createSearchByPkeyPrep() throws SQLException {
         String byKey = "SELECT name FROM T_Director WHERE directorId IN "
                 + "(SELECT directorId FROM T_MovieDirectory WHERE "
@@ -62,12 +79,23 @@ public class GetMovies implements QueryGenerator {
         searchByPkeyPrep = con.prepareStatement(byKey);
     }
     
+    /** 
+     * Creates a PreparedStatement to rate a movie 
+     * @throws SQLException 
+     */
     private void createUpdateRatingPrep() throws SQLException {
         String updateRating = "UPDATE T_Movie SET rating = ? "
                 + "WHERE movieId = ?";
         updateRatingPrep = con.prepareStatement(updateRating);
     }
     
+    /** 
+     * This will search the database and return a list of Movies
+     * @param searchBy How to search the database, by name, genre, rating, director
+     * @param searchWord The word the user is search for 
+     * @return An ArrayList<Movie> 
+     * @throws SQLException 
+     */
     @Override
     public ArrayList<Movie> search(String searchBy, String searchWord) throws SQLException {
         ResultSet rs = null;
@@ -134,6 +162,15 @@ public class GetMovies implements QueryGenerator {
         }
     }
     
+    /** 
+     * This will search the database and return a list of Movies
+     * @param search1 The movies title
+     * @param search2 The movies genre
+     * @param search3 The movies rating
+     * @param search4 The movies date
+     * @return An ArrayList<Movie> 
+     * @throws SQLException 
+     */
     @Override
     public ArrayList searchByAll(String search1, String search2, String search3, Date search4) throws SQLException {
         ResultSet rs = null;
@@ -172,11 +209,17 @@ public class GetMovies implements QueryGenerator {
         }
     }
     
+    /** 
+     * This will return an arrayList<String> containing all the names
+     * of all the directors who has a movie with that name.
+     * @param pKey The primary key of the movie.
+     * @return An ArrayList<String> 
+     * @throws SQLException 
+     */
     private ArrayList<String> searchByPkey(int pKey) throws SQLException {
         ResultSet rs = null;
         try {
             createSearchByPkeyPrep();
-            //searchByPkeyPrep.clearParameters();
             searchByPkeyPrep.setInt(1, pKey);
             rs = searchByPkeyPrep.executeQuery();
             ArrayList<String> tmp = new ArrayList();
@@ -192,6 +235,12 @@ public class GetMovies implements QueryGenerator {
             }
     }
 
+    /** 
+     * This will update the rating of selected movie.
+     * @param primaryKey The primary key of selected movie. 
+     * @param rating The new rating for the movie.
+     * @throws SQLException 
+     */
     @Override
     public void updateRating(int primaryKey, String rating) throws SQLException {
         try {

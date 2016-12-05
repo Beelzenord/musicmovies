@@ -31,33 +31,22 @@ import javafx.stage.Stage;
  */
 public class View {
    
-    private Connector model;
-    private BorderPane bPane;
-    private StackPane sPane2;
-    private Scene scene;
+    private Connector conn;
     private ArrayList<Scene> scenes;
     private ArrayList<BorderPane> bPanes;
-    private Scene scene2;
     private Controller cont;
     private Stage stage2;
     private ArtistTableView artistTableView;
     private AlbumTableView albumTableView;
     private MovieTableView movieTableView;
     private DirectorTableView directorTableView;
-    private GridPane grid;
     private Stage stage;
     
-    private CenterTableView cView;
-    private TextField theUserName;
-    private PasswordField pwBox;
-    
-    private TopHboxView hBox;
     private ArrayList<TopHboxView> hBoxes;
     private ArrayList<BotHboxView> botBoxes;
-    
     private LogInWindow lW;
-    public View(Stage stage, Connector model){
-        
+    
+    public View(Stage stage, Connector conn){
         this.stage = stage;
         
         scenes = new ArrayList();
@@ -67,10 +56,8 @@ public class View {
         movieTableView = new MovieTableView();
         directorTableView = new DirectorTableView();
         
-        this.model = model;
+        this.conn = conn;
         initScenes();
-        //bPane = new BorderPane();
-        //scene = new Scene(bPane,400, 500);
 
         lW = new LogInWindow();
         this.stage.setTitle("kTunes - Media Library");
@@ -89,15 +76,8 @@ public class View {
     }
     
     public void startMainView(){
-        
-        System.out.println("Liquid");
-        cView = new CenterTableView();
         hBoxes = new ArrayList();
         botBoxes = new ArrayList();
-        //hBox = new TopHboxView(cont);
-        
-       // bPane.getChildren().addAll(cView);
-        //bPane.setCenter(artistTableView);
         for (int i = 0; i < 4; i++) {
             hBoxes.add(new TopHboxView(cont));
             botBoxes.add(new BotHboxView(cont));
@@ -119,7 +99,6 @@ public class View {
     public void ControllerHook(Controller controller){
         cont = controller;
         lW.logToController(controller);
-        System.out.println("hooked to controller");
     }
     
     public void changeScene(int index) {
