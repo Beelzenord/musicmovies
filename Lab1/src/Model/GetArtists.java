@@ -25,6 +25,7 @@ public class GetArtists implements QueryGenerator {
     private PreparedStatement searchByAlbumPrep;
     private PreparedStatement searchByAllPrep;
     private PreparedStatement searchByPkeyPrep;
+    private PreparedStatement updateRatingPrep;
     
     public GetArtists(Connection con) {
         this.con = con;
@@ -56,10 +57,16 @@ public class GetArtists implements QueryGenerator {
     }
     
     private void createSearchByPkeyPrep() throws SQLException {
-        String byKey = "SELECT title FROM T_Album WHERE albumId = "
+        String byKey = "SELECT title FROM T_Album WHERE albumId IN "
                 + "(SELECT albumId FROM T_AlbumDirectory WHERE "
                 + "artistId = ?)";
         searchByPkeyPrep = con.prepareStatement(byKey);
+    }
+    
+    private void createUpdateRatingPrep() throws SQLException {
+        String updateRating = "UPDATE T_Artist SET rating = ? "
+                + "WHERE artistId = ?";
+        updateRatingPrep = con.prepareStatement(updateRating);
     }
     
     @Override
@@ -135,10 +142,15 @@ public class GetArtists implements QueryGenerator {
     private ArrayList<String> searchByPkey(int pKey) throws SQLException {
         ResultSet rs = null;
         try {
+            System.out.println("a");
             createSearchByPkeyPrep();
-            //searchByPkeyPrep.clearParameters();
+            System.out.println("b");
+            searchByPkeyPrep.clearParameters();
+            System.out.println("c");
             searchByPkeyPrep.setInt(1, pKey);
+            System.out.println("d");
             rs = searchByPkeyPrep.executeQuery();
+            System.out.println("e");
             ArrayList<String> tmp = new ArrayList();
             while (rs.next()) {
                 tmp.add(rs.getString("title"));
@@ -150,6 +162,19 @@ public class GetArtists implements QueryGenerator {
                 if (searchByPkeyPrep != null)
                     searchByPkeyPrep.close();
             }
+    }
+
+    @Override
+    public void updateRating(int primaryKey, String searchWord) throws SQLException {
+        try {
+            createUpdateRatingPrep();
+            updateRatingPrep.setString(1, searchWord);
+            updateRatingPrep.setInt(2, primaryKey);
+            updateRatingPrep.executeUpdate();
+        } finally {
+            if (updateRatingPrep != null)
+                updateRatingPrep.close();
+        }
     }
 
 }

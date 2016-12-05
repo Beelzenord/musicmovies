@@ -72,7 +72,6 @@ public class BotHboxView extends HBox{
         return chooseRating.getValue();
     } 
     
-    
     private void addHandlers() {
         addAlbumArtist.setOnAction((ActionEvent event) -> {
             controller.setIndexMov(0);

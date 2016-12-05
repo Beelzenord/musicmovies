@@ -71,6 +71,7 @@ public class View {
         this.stage.setTitle("musicMovies");
         this.stage.setScene(scenes.get(0));
         this.stage.show();
+        saveBeforeQuit();
     }
     
     private void initScenes() {
@@ -113,6 +114,17 @@ public class View {
     
     public void changeScene(int index) {
         stage.setScene(scenes.get(index));
+    }
+    
+    private void saveBeforeQuit(){
+        stage.setOnCloseRequest(event -> {
+            event.consume();
+            cont.exitProgram();
+        });
+    }
+    
+    public void fullyQuit() {
+        stage.close();
     }
     
      public void hide() {

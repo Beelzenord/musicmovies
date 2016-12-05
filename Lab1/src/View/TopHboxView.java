@@ -35,7 +35,6 @@ public class TopHboxView extends HBox{
         searchField = new TextField();
         searchField.setPromptText("Type here to search then press  --->");
         searchButton = new Button("Search");
-        okButton = new Button ("Ok");
         
         searchFor = new ComboBox<>();
         searchFor.getItems().addAll(
@@ -51,11 +50,9 @@ public class TopHboxView extends HBox{
         
         searchField.setPrefWidth(210);
         searchButton.setPrefWidth(90);
-        okButton.setPrefWidth(35);
         
         addHandlers();
         
-        //this.getChildren().addAll(searchFor, okButton, searchHow, searchField, searchButton);
     }
     
     public void setSearchHow(String str) {
@@ -101,17 +98,33 @@ public class TopHboxView extends HBox{
             searchHow.setPromptText("Name");
         }
         searchHow.setPrefWidth(90);
-        this.getChildren().removeAll(okButton);
         this.getChildren().clear();
-        this.getChildren().addAll(searchFor, okButton, searchHow, searchField, searchButton);
+        this.getChildren().addAll(searchFor, searchHow, searchField, searchButton);
     }
     
     public String getSearchForText() {
-        return searchFor.getValue().toLowerCase();
+        if (!searchFor.getSelectionModel().isEmpty())
+            return searchFor.getValue().toLowerCase();
+        else {
+            String str = "album";
+            return str;
+        }
     } 
     
     public String getSearchHowText() {
-        return searchHow.getValue().toLowerCase();
+        if (!searchHow.getSelectionModel().isEmpty())
+            return searchHow.getValue().toLowerCase();
+        else {
+            int ind = generateIndex();
+            if (ind == 0 || ind == 2) {
+                String str = "title";
+                return str;
+            }
+            else {
+                String str = "name";
+                return str;
+            }
+        }
     } 
     
     public String getSearched() {
@@ -122,11 +135,12 @@ public class TopHboxView extends HBox{
         searchButton.setOnAction((ActionEvent event) -> {
             controller.setIndex(generateIndex());
             String searchBy = getSearchHowText();
-            String searchWord = getSearched();
+            String searchWord = "";
+            searchWord += getSearched();
             controller.search(searchBy, searchWord);
         });
         
-        okButton.setOnAction((ActionEvent event) -> {
+        searchFor.setOnAction((ActionEvent event) -> {
             setSearchHow(getSearchForText());
         });
     }

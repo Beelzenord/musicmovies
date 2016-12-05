@@ -71,7 +71,8 @@ public class AlbumTableView extends TableView implements AllTableViews{
         ArrayList<Album> tmp = new ArrayList();
         for (Album b : selectedAritst) {
             tmp.add(b);
+            return tmp.get(0).getAlbumId();
         }
-        return tmp.get(0).getAlbumId();
+        return -1;
     }
 }

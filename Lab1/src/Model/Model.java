@@ -54,6 +54,12 @@ public class Model {
         }
     }
     
+    public void exitSafetly() throws SQLException {
+       if (myConn != null) {
+           myConn.close();
+       } 
+    }
+    
     public Connection getMyConn() {
         return myConn;
     }

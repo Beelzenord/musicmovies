@@ -25,6 +25,7 @@ public class GetAlbums implements QueryGenerator{
     private PreparedStatement searchByArtistPrep;
     private PreparedStatement searchByAllPrep;
     private PreparedStatement searchByPkeyPrep;
+    private PreparedStatement updateRatingPrep;
     
     public GetAlbums(Connection con) {
         this.con = con;
@@ -58,10 +59,16 @@ public class GetAlbums implements QueryGenerator{
     }
     
     private void createSearchByPkeyPrep() throws SQLException {
-        String byKey = "SELECT name FROM T_Artist WHERE artistId = "
+        String byKey = "SELECT name FROM T_Artist WHERE artistId IN "
                 + "(SELECT artistId FROM T_AlbumDirectory WHERE "
                 + "albumId = ?)";
         searchByPkeyPrep = con.prepareStatement(byKey);
+    }
+    
+    private void createUpdateRatingPrep() throws SQLException {
+        String updateRating = "UPDATE T_Album SET rating = ? "
+                + "WHERE albumId = ?";
+        updateRatingPrep = con.prepareStatement(updateRating);
     }
     
     @Override
@@ -158,6 +165,19 @@ public class GetAlbums implements QueryGenerator{
                 if (searchByPkeyPrep != null)
                     searchByPkeyPrep.close();
             }
+    }
+
+    @Override
+    public void updateRating(int primaryKey, String searchWord) throws SQLException {
+        try {
+            createUpdateRatingPrep();
+            updateRatingPrep.setString(1, searchWord);
+            updateRatingPrep.setInt(2, primaryKey);
+            updateRatingPrep.executeUpdate();
+        } finally {
+            if (updateRatingPrep != null)
+                updateRatingPrep.close();
+        }
     }
     
 }
