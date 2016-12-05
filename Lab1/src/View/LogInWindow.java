@@ -28,15 +28,28 @@ import javafx.stage.Stage;
 public class LogInWindow {
     private Controller cont;
     private GridPane grid;
+    private GridPane grid2;
     private TextField theUserName;
     private PasswordField pwBox;
     private Scene scene2;
     private Stage stage2;
+    private Scene scene3;
+    private Stage stage3;
+    private Button newProfileButton;
+    
+    private TextField newUserName;
+    private TextField newPassword;
+    private Button establishNewProfile;
+    
+    private String Uname;
+    private String Pass;
+    
     public LogInWindow(){
         initLoginWindow();
     }
     private void initLoginWindow(){
-         grid = new GridPane();
+        // newProfileButton();
+        grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
@@ -46,7 +59,7 @@ public class LogInWindow {
         grid.add(scenetitle, 0, 0, 2, 1);
         Label userName = new Label("User Name:");
         grid.add(userName, 0, 1);
-
+        
         TextField theUserName = new TextField();
         grid.add(theUserName, 1, 1);
         
@@ -59,14 +72,15 @@ public class LogInWindow {
         Button btn2 = new Button("Sign in");
         HBox hbBtn = new HBox(10);
         hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
-        hbBtn.getChildren().add(btn2);
+        newProfileButton = new Button("Create New Profile");
+        hbBtn.getChildren().addAll(btn2,newProfileButton);
+        newProfileButton();
         grid.add(hbBtn, 1, 4);
-        
         btn2.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println(pwBox.getText());
-              //  System.out.print(theUserName.getText());
+                //  System.out.print(theUserName.getText());
                 String username = theUserName.getText();
                 String password = pwBox.getText();
                 try {
@@ -77,7 +91,7 @@ public class LogInWindow {
                 }
             }
         });
-         scene2 = new Scene(grid, 250, 250);   
+        scene2 = new Scene(grid, 250, 250);
         stage2 = new Stage();
         stage2.setTitle("Log in Screen");
         stage2.setScene(scene2);
@@ -88,7 +102,60 @@ public class LogInWindow {
         this.cont = controller;
         //cont.acknowledgeLogIn(this);
     }
-     public void hide() {
+    public void hide() {
+        System.out.println("hide hide hide");
         stage2.close();
+    }
+    public void newProfileButton(){
+        newProfileButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Closer to the sdge");
+                newProfileWindow();
+                
+            }
+            
+        });
+    }
+    private void newProfileWindow(){
+        grid2 = new GridPane();
+        grid2.setAlignment(Pos.CENTER);
+        grid2.setHgap(10);
+        grid2.setVgap(10);
+        establishNewProfile = new Button("Confirm new profile");
+        Label usersName = new Label("please insert your full name name: ");
+        Label passLabel = new Label("insert your password ");
+        Text scenetitle = new Text("New User Profile");
+        officiateNewProfile();
+        grid2.add(scenetitle, 0, 0, 2, 1);
+        grid2.add(usersName, 0, 1);
+        grid2.add(passLabel, 0, 2);
+        newUserName = new TextField();
+        newPassword= new TextField();
+        grid2.add(newUserName, 1, 1);
+        grid2.add(newPassword, 1, 2);
+        grid2.add(establishNewProfile, 1, 3);
+        scene3 = new Scene(grid2,200,200);
+        stage3 = new Stage();
+        stage3.setTitle("Log in Screen");
+        stage3.setScene(scene3);
+        stage3.show();
+    }
+    private void officiateNewProfile(){
+        establishNewProfile.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Uname = newUserName.getText().trim();
+                Pass  = newPassword.getText().trim();
+                System.out.println("test test test");
+                System.out.println(Uname+Pass);
+                
+                try {
+                    cont.launchNewUserDetail(Uname, Pass);
+                } catch (SQLException ex) {
+                    Logger.getLogger(LogInWindow.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
     }
 }
