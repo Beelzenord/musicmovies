@@ -24,6 +24,7 @@ public class RelationalDatabase implements AllQueries{
     private PreparedStatement insertMediaPrep;
     private PreparedStatement insertEntertainerPrep;
     private PreparedStatement insertNewDirectoryPrep;
+    private PreparedStatement skipDuplicatesPrep;
     
     private int mediaPKEY;
     private int entertainerPKEY;
@@ -225,19 +226,9 @@ public class RelationalDatabase implements AllQueries{
     @Override
     public void addNewItem(String determ, String title, String genre, String ratingAM, Date rDate, String name, String ratingAD, String nationality) throws SQLException {
         try {
-            // only add new album if it doesn't already exist
-            //ArrayList<Album> tmp1 = new GetAlbums(con).searchByAll(title, genre, ratingAM, rDate);
-            System.out.println("determ: " + determ);
-            
             con.setAutoCommit(false);
-            //if (tmp1 == null) {
-                
-                
-                
-                
                 ResultSet rs = null;
                 try {
-                    System.out.println("2");
                     createInsertMediaPrep(determ);
                     
                     insertMediaPrep.setString(1, title);
@@ -254,24 +245,10 @@ public class RelationalDatabase implements AllQueries{
                     if (insertMediaPrep != null)
                         insertMediaPrep.close();
                 }
-            
-           System.out.println("3");
-                
-                
-           // }
-            //else
-             //   albumPKEY = tmp1.get(0).getAlbumId();
-            
-            // only add new artist if it doesn't already exist
-            //ArrayList<Artist> tmp2 = new GetArtists(con).searchByAll(name, ratingAD, nationality, rDate);
-            
-            //con.setAutoCommit(false);
-            //if (tmp2 == null) {
-            
-            
-                //ResultSet rs = null;
+         
+                entertainerPKEY = skipDuplicates(determ, name, ratingAD, nationality);
+            if (entertainerPKEY == -1) {
                 try {
-                    System.out.println("4");
                     createInsertEntertainerPrep(determ);
                     insertEntertainerPrep.setString(1, name);
                     insertEntertainerPrep.setString(2, ratingAD);
@@ -287,34 +264,22 @@ public class RelationalDatabase implements AllQueries{
                     if (insertEntertainerPrep != null)
                         insertEntertainerPrep.close();
                 }
-            //}
-            System.out.println("5");
-           // else
-           //     artistPKEY = tmp2.get(0).getArtistId();
-            
+            }
+
             // sambandstabell
             try {
-                System.out.println("a");
                 createInsertNewDirectoryPrep(determ);
-                System.out.println("b");
-                System.out.println("mediaPKEY: " +mediaPKEY);
-                System.out.println("entertainerPKEY: " + entertainerPKEY);
-                insertNewDirectoryPrep.setInt(1, mediaPKEY);
-                System.out.println("c");
-                insertNewDirectoryPrep.setInt(2, entertainerPKEY);
-                System.out.println("d");
-                //insertNewDirectoryPrep.executeUpdate();
-                System.out.println("e");
+                insertNewDirectoryPrep.setInt(1, entertainerPKEY);
+                insertNewDirectoryPrep.setInt(2, mediaPKEY);
+                insertNewDirectoryPrep.executeUpdate();
             } finally {
                 if (insertNewDirectoryPrep != null)
                     insertNewDirectoryPrep.close();
             }
-            System.out.println("6");
             
             con.commit();
             
         }catch (SQLException ex) {
-            System.out.println("rip");
             if (con != null)
                 con.rollback();
             throw ex;
@@ -324,6 +289,39 @@ public class RelationalDatabase implements AllQueries{
         }
     }
     
+    private void createSkipDuplicatesPrep(String determ) throws SQLException {
+        String skipDuplicates = "";
+        if (determ.equals("album")) {
+            skipDuplicates = "SELECT artistId FROM T_Artist WHERE name = ? "
+                + "AND rating = ? AND nationality = ?";
+        }
+        else {
+            skipDuplicates = "SELECT directorId FROM T_Director WHERE name = ? "
+                + "AND rating = ? AND nationality = ?";
+        }
+        skipDuplicatesPrep = con.prepareStatement(skipDuplicates);
+    }
+    
+    private int skipDuplicates(String determ, String name, String rating, String nationality) throws SQLException {
+        ResultSet rs = null;
+        int pKey = -1;
+        try {
+            createSkipDuplicatesPrep(determ);
+            skipDuplicatesPrep.setString(1, name);
+            skipDuplicatesPrep.setString(2, rating);
+            skipDuplicatesPrep.setString(3, nationality);
+            rs = skipDuplicatesPrep.executeQuery();
+            while (rs.next()) {
+                pKey = rs.getInt(1);
+            }
+            return pKey;
+        } finally {
+            if (rs != null)
+                rs.close();
+            if (skipDuplicatesPrep != null)
+                skipDuplicatesPrep.close();
+        }
+    }
 
     
 }
