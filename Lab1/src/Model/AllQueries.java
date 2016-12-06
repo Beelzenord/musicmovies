@@ -5,6 +5,7 @@
  */
 package Model;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -15,7 +16,9 @@ import java.util.ArrayList;
 public interface AllQueries<E> {
     
     public ArrayList<E> getMedia(String media, String searchBy, String searchWord) throws SQLException;
+    
     public ArrayList<E> getEntertainer(String entertainer, String searchBy, String searchWord) throws SQLException;
     
+    public void addNewItem(String determ, String title, String genre, String ratingAM, Date rDate, String name, String ratingAD, String nationality) throws SQLException;
     
 }

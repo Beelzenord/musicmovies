@@ -172,6 +172,34 @@ public class Controller {
         }.start();
     }
     
+    public void addNewItem(String determ, String title, String genre, String ratingAM, Date rDate, String name, String ratingAD, String nationality) {
+        new Thread() {
+            public void run() {
+                try {
+                    relationalDB.addNewItem(determ, title, genre, ratingAM, rDate, name, ratingAD, nationality);
+                    Platform.runLater(
+                            new Runnable() {
+                                public void run() {
+                                    //UPDATE VIEW
+                                    System.out.println("updated view");
+                                    //theTables.get(queryIndex).showTable(tmp);
+                                    //view.changeScene(queryIndex);
+                                }
+                            });
+                } catch (SQLException ex) {
+                    // SHOW ALERT MESSAGE
+                    Platform.runLater(
+                            new Runnable() {
+                                public void run() {
+                                    alertView.showAlert("Search Failed!\n"
+                                        + "You might not be authorized for this action!");    
+                                }
+                            });
+                }
+            }
+        }.start();
+    }
+    
     
     public void search2(String searchBy, String searchWord) {
         lastSearchBy = searchBy;
@@ -353,7 +381,7 @@ public class Controller {
         }
         else {
             Date rDate = new Date(year-1900, month-1, day);
-            insertNewItem(tmp.get(0), tmp.get(1), tmp.get(2), rDate, tmp.get(6), tmp.get(7), tmp.get(8));
+            addNewItem("album", tmp.get(0), tmp.get(1), tmp.get(2), rDate, tmp.get(6), tmp.get(7), tmp.get(8));
 
             addNewAlbArtView.exitStage();
         }
@@ -438,7 +466,7 @@ public class Controller {
         }
         else {
             Date rDate = new Date(year-1900, month-1, day);
-            insertNewItem(tmp.get(0), tmp.get(1), tmp.get(2), rDate, tmp.get(6), tmp.get(7), tmp.get(8));
+            addNewItem("movie", tmp.get(0), tmp.get(1), tmp.get(2), rDate, tmp.get(6), tmp.get(7), tmp.get(8));
 
             addNewMovDirView.exitStage();
         }
