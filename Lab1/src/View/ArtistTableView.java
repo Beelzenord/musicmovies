@@ -35,7 +35,7 @@ public class ArtistTableView extends TableView implements AllTableViews {
         rating.setMinWidth(80);
         nationality = new TableColumn("Nationality");
         nationality.setMinWidth(80);
-        album = new TableColumn("Albums");
+        album = new TableColumn("Album");
         album.setMinWidth(120);
         
         this.getColumns().addAll(name, rating, nationality, album);
@@ -46,14 +46,14 @@ public class ArtistTableView extends TableView implements AllTableViews {
         nationality.setCellValueFactory(
             new PropertyValueFactory<Artist, String>("nationality"));
         album.setCellValueFactory(
-            new PropertyValueFactory<Artist, ArrayList<String>>("albums"));
+            new PropertyValueFactory<Artist, String>("album"));
     }    
     
     @Override
     public void showTable(ArrayList<? extends Object> theResult) {
-        ObservableList<Artist> tmpObvBooks;
-        tmpObvBooks = FXCollections.observableArrayList((ArrayList<Artist>) theResult);
-        this.setItems(tmpObvBooks);
+        ObservableList<Artist> tmpObv;
+        tmpObv = FXCollections.observableArrayList((ArrayList<Artist>) theResult);
+        this.setItems(tmpObv);
     }
     
     @Override

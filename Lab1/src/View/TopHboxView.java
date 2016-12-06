@@ -132,10 +132,14 @@ public class TopHboxView extends HBox{
     private void addHandlers() {
         searchButton.setOnAction((ActionEvent event) -> {
             controller.setQueryIndex(generateIndex());
+            String searchFor = getSearchForText();
             String searchBy = getSearchHowText();
             String searchWord = "";
             searchWord += getSearched();
-            controller.search(searchBy, searchWord);
+            if (searchFor.equals("album") || searchFor.equals("movie"))
+                controller.searchMedia(searchFor, searchBy, searchWord);
+            else
+                controller.searchEntertainer(searchFor, searchBy, searchWord);
         });
         
         searchFor.setOnAction((ActionEvent event) -> {

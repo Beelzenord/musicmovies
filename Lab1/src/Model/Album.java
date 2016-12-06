@@ -18,17 +18,15 @@ public class Album {
     private String genre;
     private String rating;
     private Date releaseDate;
-    private ArrayList<String> artists;
+    private String artist;
     
-    public Album(int albumId, String title, String genre, String rating, Date releaseDate, ArrayList<String> artists) {
+    public Album(int albumId, String title, String genre, String rating, Date releaseDate, String artist) {
         this.albumId = albumId;
         this.title = title;
         this.genre = genre;
         this.rating = rating;
         this.releaseDate = releaseDate;
-        this.artists = new ArrayList();
-        for (String s : artists)
-            this.artists.add(s);
+        this.artist = artist;
     }
     public Album(String title, String genre, String rating, Date releaseDate) {
         this.title = title;
@@ -76,14 +74,12 @@ public class Album {
     public void setReleaseDate(Date releaseDate) {
         this.releaseDate = releaseDate;
     }
-    
-    public String getArtists() {
-        String tmp = new String("");
-        for (String s : artists) {
-            tmp += s + ", ";
-        }
-        return tmp;
+
+    public String getArtist() {
+        return artist;
     }
+    
+
 
     @Override
     public String toString() {

@@ -39,7 +39,7 @@ public class MovieTableView extends TableView implements AllTableViews{
         rating.setMinWidth(80);
         date = new TableColumn("Release Date");
         date.setMinWidth(120);
-        directors = new TableColumn("Directors");
+        directors = new TableColumn("Director");
         directors.setMinWidth(120);
         
         this.getColumns().addAll(title, genre, rating, date, directors);
@@ -52,7 +52,7 @@ public class MovieTableView extends TableView implements AllTableViews{
         date.setCellValueFactory(
             new PropertyValueFactory<Movie, Date>("releaseDate"));
         directors.setCellValueFactory(
-            new PropertyValueFactory<Movie, ArrayList<String>>("directors"));
+            new PropertyValueFactory<Movie, String>("director"));
     }    
     
     @Override
@@ -64,11 +64,11 @@ public class MovieTableView extends TableView implements AllTableViews{
     
     @Override
     public int userRating() {
-        ObservableList<Movie> selectedAritst;
+        ObservableList<Movie> selected;
 
-        selectedAritst = this.getSelectionModel().getSelectedItems();
+        selected = this.getSelectionModel().getSelectedItems();
         ArrayList<Movie> tmp = new ArrayList();
-        for (Movie b : selectedAritst) {
+        for (Movie b : selected) {
             tmp.add(b);
             return tmp.get(0).getMovieId();
         }

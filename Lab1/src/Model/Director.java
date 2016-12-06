@@ -16,17 +16,15 @@ public class Director {
     private String name;
     private String rating;
     private String nationality;
-    private ArrayList<String> movies;
+    private String movie;
     
     
-    public Director(int directorId, String name, String rating, String nationality, ArrayList<String> movies) { //
+    public Director(int directorId, String name, String rating, String nationality, String movie) { //
         this.directorId = directorId;
         this.name = name;
         this.rating = rating;
         this.nationality = nationality;
-        this.movies = new ArrayList();
-        for (String s : movies)
-            this.movies.add(s);
+        this.movie = movie;
     }
 
     public int getDirectorId() {
@@ -61,17 +59,13 @@ public class Director {
         this.nationality = nationality;
     }
     
-    public String getMovies() {
-        String tmp = new String("");
-        for (String s : movies) {
-            tmp += s + ", ";
-        }
-        return tmp;
+    public String getMovie() {
+        return movie;
     }
 
     @Override
     public String toString() {
-        return "Director{" + "name=" + name + ", rating=" + rating + ", nationality=" + nationality + ", movies=" + movies + '}';
+        return "Director{" + "name=" + name + ", rating=" + rating + ", nationality=" + nationality + '}';
     }
     
     

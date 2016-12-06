@@ -39,7 +39,7 @@ public class AlbumTableView extends TableView implements AllTableViews{
         rating.setMinWidth(80);
         date = new TableColumn("Release Date");
         date.setMinWidth(120);
-        artists = new TableColumn("Artists");
+        artists = new TableColumn("Artist");
         artists.setMinWidth(120);
         
         this.getColumns().addAll(title, genre, rating, date, artists);
@@ -52,7 +52,7 @@ public class AlbumTableView extends TableView implements AllTableViews{
         date.setCellValueFactory(
             new PropertyValueFactory<Album, Date>("releaseDate"));
         artists.setCellValueFactory(
-            new PropertyValueFactory<Album, ArrayList<String>>("artists"));
+            new PropertyValueFactory<Album, String>("artist"));
     }    
     
     @Override
@@ -64,11 +64,11 @@ public class AlbumTableView extends TableView implements AllTableViews{
     
     @Override
     public int userRating() {
-        ObservableList<Album> selectedAritst;
+        ObservableList<Album> selected;
 
-        selectedAritst = this.getSelectionModel().getSelectedItems();
+        selected = this.getSelectionModel().getSelectedItems();
         ArrayList<Album> tmp = new ArrayList();
-        for (Album b : selectedAritst) {
+        for (Album b : selected) {
             tmp.add(b);
             return tmp.get(0).getAlbumId();
         }

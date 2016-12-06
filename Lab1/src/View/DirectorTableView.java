@@ -35,7 +35,7 @@ public class DirectorTableView extends TableView implements AllTableViews {
         rating.setMinWidth(80);
         nationality = new TableColumn("Nationality");
         nationality.setMinWidth(80);
-        movie = new TableColumn("Movies");
+        movie = new TableColumn("Movie");
         movie.setMinWidth(120);
         
         this.getColumns().addAll(name, rating, nationality, movie);
@@ -46,14 +46,14 @@ public class DirectorTableView extends TableView implements AllTableViews {
         nationality.setCellValueFactory(
             new PropertyValueFactory<Director, String>("nationality"));
         movie.setCellValueFactory(
-            new PropertyValueFactory<Director, ArrayList<String>>("movies"));
+            new PropertyValueFactory<Director, String>("movie"));
     }    
     
     @Override
     public void showTable(ArrayList<? extends Object> theResult) {
-        ObservableList<Director> tmpObvBooks;
-        tmpObvBooks = FXCollections.observableArrayList((ArrayList<Director>) theResult);
-        this.setItems(tmpObvBooks);
+        ObservableList<Director> tmpObv;
+        tmpObv = FXCollections.observableArrayList((ArrayList<Director>) theResult);
+        this.setItems(tmpObv);
     }
     
     @Override

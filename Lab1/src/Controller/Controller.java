@@ -1,13 +1,13 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
 package Controller;
-
 
 import Model.AddNewAlbArt;
 import Model.AddNewMovDir;
+import Model.AllQueries;
 import Model.GetAlbums;
 import Model.GetArtists;
 import Model.GetDirectors;
@@ -15,6 +15,7 @@ import Model.GetMovies;
 import Model.Movie;
 import Model.QueryGenerator;
 import Model.InsertGenerator;
+import Model.RelationalDatabase;
 import View.AddNewAlbArtView;
 import View.AddNewMovDirView;
 import View.AlertView;
@@ -24,6 +25,8 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 
 /**
@@ -34,38 +37,42 @@ public class Controller {
     private ArrayList<QueryGenerator> theQueries;
     private ArrayList<InsertGenerator> theInserts;
     private ArrayList<AllTableViews> theTables;
+    private AllQueries relationalDB;
     private AddNewAlbArtView addNewAlbArtView;
     private AddNewMovDirView addNewMovDirView;
     private AlertView alertView;
-    private Connector conn;
+    private Connector model;
     private View view;
     private int queryIndex;
     private int insertIndex;
+    private String lastSearchFor;
     private String lastSearchBy;
     private String lastSearchWord;
     
     
-    public Controller(Connector conn, View view) {
+    public Controller(Connector model, View view) {
         theQueries = new ArrayList();
         theInserts = new ArrayList();
         theTables = new ArrayList();
         this.alertView = new AlertView();
         queryIndex = 0;
         insertIndex = 0;
+        lastSearchFor = "album";
         lastSearchBy = "album";
         lastSearchWord = "title";
-        this.conn = conn;
+        this.model = model;
         this.view = view;
         view.ControllerHook(this);
     }
     
     public void systemAccess() throws SQLException {
-        theQueries.add(new GetAlbums(conn.getMyConn()));
-        theQueries.add(new GetArtists(conn.getMyConn()));
-        theQueries.add(new GetMovies(conn.getMyConn()));
-        theQueries.add(new GetDirectors(conn.getMyConn()));
-        theInserts.add(new AddNewAlbArt(conn.getMyConn()));
-        theInserts.add(new AddNewMovDir(conn.getMyConn()));
+        theQueries.add(new GetAlbums(model.getMyConn()));
+        theQueries.add(new GetArtists(model.getMyConn()));
+        theQueries.add(new GetMovies(model.getMyConn()));
+        theQueries.add(new GetDirectors(model.getMyConn()));
+        theInserts.add(new AddNewAlbArt(model.getMyConn()));
+        theInserts.add(new AddNewMovDir(model.getMyConn()));
+        relationalDB = new RelationalDatabase(model.getMyConn());
     }
     
     public void connectViews(AllTableViews altw, AllTableViews artw, AllTableViews motw, AllTableViews ditw) {
@@ -81,7 +88,7 @@ public class Controller {
     }
     
     public void transfer(String userName, String passWord) throws SQLException{
-        if (conn.validateUserIdentity(userName,passWord)) {
+        if (model.validateUserIdentity(userName,passWord)) {
             systemAccess();
         }
     }
@@ -104,7 +111,69 @@ public class Controller {
         insertIndex = index;
     }
     
-    public void search(String searchBy, String searchWord) {
+    
+    public void searchMedia(String searchFor, String searchBy, String searchWord) {
+        lastSearchFor = searchFor;
+        lastSearchBy = searchBy;
+        lastSearchWord = searchWord;
+        new Thread() {
+            public void run() {
+                try {
+                    ArrayList tmp = relationalDB.getMedia(searchFor, searchBy, searchWord);
+                    Platform.runLater(
+                            new Runnable() {
+                                public void run() {
+                                    //UPDATE VIEW
+                                    theTables.get(queryIndex).showTable(tmp);
+                                    view.changeScene(queryIndex);
+                                }
+                            });
+                } catch (SQLException ex) {
+                    // SHOW ALERT MESSAGE
+                    Platform.runLater(
+                            new Runnable() {
+                                public void run() {
+                                    alertView.showAlert("Search Failed!\n"
+                                        + "You might not be authorized for this action!");    
+                                }
+                            });
+                }
+            }
+        }.start();
+    }
+    
+    public void searchEntertainer(String searchFor, String searchBy, String searchWord) {
+        lastSearchFor = searchFor;
+        lastSearchBy = searchBy;
+        lastSearchWord = searchWord;
+        new Thread() {
+            public void run() {
+                try {
+                    ArrayList tmp = relationalDB.getEntertainer(searchFor, searchBy, searchWord);
+                    Platform.runLater(
+                            new Runnable() {
+                                public void run() {
+                                    //UPDATE VIEW
+                                    theTables.get(queryIndex).showTable(tmp);
+                                    view.changeScene(queryIndex);
+                                }
+                            });
+                } catch (SQLException ex) {
+                    // SHOW ALERT MESSAGE
+                    Platform.runLater(
+                            new Runnable() {
+                                public void run() {
+                                    alertView.showAlert("Search Failed!\n"
+                                        + "You might not be authorized for this action!");    
+                                }
+                            });
+                }
+            }
+        }.start();
+    }
+    
+    
+    public void search2(String searchBy, String searchWord) {
         lastSearchBy = searchBy;
         lastSearchWord = searchWord;
         new Thread() {
@@ -146,7 +215,7 @@ public class Controller {
                                 new Runnable() {
                                     public void run() {
                                         //UPDATE VIEW
-                                        search(lastSearchBy, lastSearchWord);
+                                        search2(lastSearchBy, lastSearchWord);
                                     }
                                 });
                     } catch (SQLException ex) {
@@ -173,7 +242,7 @@ public class Controller {
                             new Runnable() {
                                 public void run() {
                                     //UPDATE VIEW
-                                    search(lastSearchBy, lastSearchWord);
+                                    search2(lastSearchBy, lastSearchWord);
                                 }
                             });
                 } catch (SQLException ex) {
@@ -192,7 +261,7 @@ public class Controller {
     
     public void exitProgram() {
         try {
-            conn.exitSafetly();
+            model.exitSafetly();
             view.fullyQuit();
         } catch (SQLException ex) {
             alertView.showAlert("Could not close connection!");
@@ -378,33 +447,6 @@ public class Controller {
     public void handleAddNewMovDirCancel() {
         addNewMovDirView.exitStage();
     }
-     public void launchNewUserDetail(String name, String pass) throws SQLException{
-        //aNU = new AddNewUser(name,pass,model.getMyConn());
-          new Thread() {
-            public void run() {
-                try {
-                  //  ArrayList asd = theQueries.get(queryIndex).search(searchBy, searchWord);
-                    Platform.runLater(
-                            new Runnable() {
-                                public void run() {
-                                    try {
-                                        //UPDATE VIEW while loop?
-                                        
-                                     // aNU = new AddNewUser(name,pass,model);
-                                    } catch (Exception ex) {
-                                        Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-                                    }
-                                }
-                            });
-                }
-                catch (Exception ex) {
-                    // SHOW ALERT MESSAGE
-                    System.out.println("ooo");
-                }
-            }
-                
-        }.start();
-    
-    }
     
 }
+

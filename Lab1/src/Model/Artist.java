@@ -16,17 +16,15 @@ public class Artist {
     private String name;
     private String rating;
     private String nationality;
-    private ArrayList<String> albums;
+    private String album;
     
     
-    public Artist(int artistId, String name, String rating, String nationality, ArrayList<String> albums) { //
+    public Artist(int artistId, String name, String rating, String nationality, String album) { 
         this.artistId = artistId;
         this.name = name;
         this.rating = rating;
         this.nationality = nationality;
-        this.albums = new ArrayList();
-        for (String s : albums)
-            this.albums.add(s);
+        this.album = album;
     }
 
     public int getArtistId() {
@@ -61,17 +59,13 @@ public class Artist {
         this.nationality = nationality;
     }
     
-    public String getAlbums() {
-        String tmp = new String("");
-        for (String s : albums) {
-            tmp += s + ", ";
-        }
-        return tmp;
+    public String getAlbum() {
+        return album;
     }
 
     @Override
     public String toString() {
-        return "Artist{" + "name=" + name + ", rating=" + rating + ", nationality=" + nationality + ", albums=" + albums + '}';
+        return "Artist{" + "name=" + name + ", rating=" + rating + ", nationality=" + nationality + '}';
     }
 
 }

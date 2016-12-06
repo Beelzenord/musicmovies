@@ -71,7 +71,7 @@ public class LogInWindow {
         hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
         newProfileButton = new Button("Create New Profile");
         hbBtn.getChildren().addAll(btn2,newProfileButton);
-        newProfileButton();
+        //newProfileButton();
         grid.add(hbBtn, 1, 4);
         btn2.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -146,11 +146,11 @@ public class LogInWindow {
                  System.out.println("test test test");
                  System.out.println(Uname+Pass);
                  
-                 try {
+                 /*try {
                      cont.launchNewUserDetail(Uname, Pass);
                  } catch (SQLException ex) {
                      Logger.getLogger(LogInWindow.class.getName()).log(Level.SEVERE, null, ex);
-                 }
+                 }*/
              }
          });
      }

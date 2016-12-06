@@ -6,7 +6,6 @@
 package Model;
 
 import java.sql.Date;
-import java.util.ArrayList;
 
 /**
  *
@@ -18,17 +17,15 @@ public class Movie {
     private String genre;
     private String rating;
     private Date releaseDate;
-    private ArrayList<String> directors;
+    private String director;
     
-    public Movie(int movieId, String title, String genre, String rating, Date releaseDate, ArrayList<String> directors) {
+    public Movie(int movieId, String title, String genre, String rating, Date releaseDate, String director) {
         this.movieId = movieId;
         this.title = title;
         this.genre = genre;
         this.rating = rating;
         this.releaseDate = releaseDate;
-        this.directors = new ArrayList();
-        for (String s : directors)
-            this.directors.add(s);
+        this.director = director;
     }
     public Movie(String title, String genre, String rating, Date releaseDate) {
         this.title = title;
@@ -76,20 +73,17 @@ public class Movie {
     public void setReleaseDate(Date releaseDate) {
         this.releaseDate = releaseDate;
     }
-    
-    public String getDirectors() {
-        String tmp = new String("");
-        for (String s : directors) {
-            tmp += s + ", ";
-        }
-        return tmp;
+
+    public String getDirector() {
+        return director;
     }
+    
+
 
     @Override
     public String toString() {
         return "Movie{" + "title=" + title + ", genre=" + genre 
             + ", rating=" + rating + ", releaseDate=" + releaseDate + '}';
     }
-    
     
 }
