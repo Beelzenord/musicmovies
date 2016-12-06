@@ -1,13 +1,3 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-/**
- * Author:  Niklas
- * Created: Nov 30, 2016
- */
-
 CREATE DATABASE IF NOT EXISTS kTunes;
 
 USE kTunes;
@@ -49,7 +39,11 @@ nationality VARCHAR(40)
 
 CREATE TABLE IF NOT EXISTS T_User (
 userId INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+<<<<<<< Updated upstream
 name VARCHAR(40), 
+=======
+name VARCHAR(40),
+>>>>>>> Stashed changes
 password VARCHAR(40)
 );
 

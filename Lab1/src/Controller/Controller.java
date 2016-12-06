@@ -1,9 +1,10 @@
 /*
-* To change this license header, choose License Headers in Project Properties.
-* To change this template file, choose Tools | Templates
-* and open the template in the editor.
-*/
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package Controller;
+
 
 import Model.AddNewAlbArt;
 import Model.AddNewMovDir;
@@ -377,6 +378,33 @@ public class Controller {
     public void handleAddNewMovDirCancel() {
         addNewMovDirView.exitStage();
     }
+     public void launchNewUserDetail(String name, String pass) throws SQLException{
+        //aNU = new AddNewUser(name,pass,model.getMyConn());
+          new Thread() {
+            public void run() {
+                try {
+                  //  ArrayList asd = theQueries.get(queryIndex).search(searchBy, searchWord);
+                    Platform.runLater(
+                            new Runnable() {
+                                public void run() {
+                                    try {
+                                        //UPDATE VIEW while loop?
+                                        
+                                     // aNU = new AddNewUser(name,pass,model);
+                                    } catch (Exception ex) {
+                                        Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                }
+                            });
+                }
+                catch (Exception ex) {
+                    // SHOW ALERT MESSAGE
+                    System.out.println("ooo");
+                }
+            }
+                
+        }.start();
+    
+    }
     
 }
-
