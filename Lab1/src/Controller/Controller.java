@@ -5,16 +5,7 @@
 */
 package Controller;
 
-import Model.AddNewAlbArt;
-import Model.AddNewMovDir;
 import Model.AllQueries;
-import Model.GetAlbums;
-import Model.GetArtists;
-import Model.GetDirectors;
-import Model.GetMovies;
-import Model.Movie;
-import Model.QueryGenerator;
-import Model.InsertGenerator;
 import Model.RelationalDatabase;
 import View.AddNewAlbArtView;
 import View.AddNewMovDirView;
@@ -25,8 +16,6 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 
 /**
@@ -34,8 +23,6 @@ import javafx.application.Platform;
  * @author Niklas
  */
 public class Controller {
-    private ArrayList<QueryGenerator> theQueries;
-    private ArrayList<InsertGenerator> theInserts;
     private ArrayList<AllTableViews> theTables;
     private AllQueries relationalDB;
     private AddNewAlbArtView addNewAlbArtView;
@@ -44,19 +31,15 @@ public class Controller {
     private Connector model;
     private View view;
     private int queryIndex;
-    private int insertIndex;
     private String lastSearchFor;
     private String lastSearchBy;
     private String lastSearchWord;
     
     
     public Controller(Connector model, View view) {
-        theQueries = new ArrayList();
-        theInserts = new ArrayList();
         theTables = new ArrayList();
         this.alertView = new AlertView();
         queryIndex = 0;
-        insertIndex = 0;
         lastSearchFor = "album";
         lastSearchBy = "album";
         lastSearchWord = "title";
@@ -66,25 +49,14 @@ public class Controller {
     }
     
     public void systemAccess() throws SQLException {
-        theQueries.add(new GetAlbums(model.getMyConn()));
-        theQueries.add(new GetArtists(model.getMyConn()));
-        theQueries.add(new GetMovies(model.getMyConn()));
-        theQueries.add(new GetDirectors(model.getMyConn()));
-        theInserts.add(new AddNewAlbArt(model.getMyConn()));
-        theInserts.add(new AddNewMovDir(model.getMyConn()));
         relationalDB = new RelationalDatabase(model.getMyConn());
     }
     
     public void connectViews(AllTableViews altw, AllTableViews artw, AllTableViews motw, AllTableViews ditw) {
-        System.out.println("CONNECTED VIEWS");
         theTables.add(altw);
         theTables.add(artw);
         theTables.add(motw);
         theTables.add(ditw);
-    }
-    
-    public void handleButton(){
-        System.out.println("Conasdasdsafirm");
     }
     
     public void transfer(String userName, String passWord) throws SQLException{
@@ -94,23 +66,19 @@ public class Controller {
     }
     
     public void initViews() {
-        System.out.println("initViews");
         view.startMainView();
     }
-    
-    public void confirm(){
-        System.out.println("confirm");
-    }
-    
     
     public void setQueryIndex(int index) {
         queryIndex = index;
     }
     
-    public void setIndexMov(int index) {
-        insertIndex = index;
+    public void updateView() {
+        if (lastSearchFor.equals("album") || lastSearchFor.equals("movie"))
+            searchMedia(lastSearchFor, lastSearchBy, lastSearchWord);
+        else
+            searchEntertainer(lastSearchFor, lastSearchBy, lastSearchWord);
     }
-    
     
     public void searchMedia(String searchFor, String searchBy, String searchWord) {
         lastSearchFor = searchFor;
@@ -181,9 +149,7 @@ public class Controller {
                             new Runnable() {
                                 public void run() {
                                     //UPDATE VIEW
-                                    System.out.println("updated view");
-                                    //theTables.get(queryIndex).showTable(tmp);
-                                    //view.changeScene(queryIndex);
+                                    updateView();
                                 }
                             });
                 } catch (SQLException ex) {
@@ -200,50 +166,18 @@ public class Controller {
         }.start();
     }
     
-    
-    public void search2(String searchBy, String searchWord) {
-        lastSearchBy = searchBy;
-        lastSearchWord = searchWord;
-        new Thread() {
-            public void run() {
-                try {
-                    ArrayList tmp = theQueries.get(queryIndex).search(searchBy, searchWord);
-                    Platform.runLater(
-                            new Runnable() {
-                                public void run() {
-                                    //UPDATE VIEW
-                                    theTables.get(queryIndex).showTable(tmp);
-                                    view.changeScene(queryIndex);
-                                }
-                            });
-                } catch (SQLException ex) {
-                    // SHOW ALERT MESSAGE
-                    Platform.runLater(
-                            new Runnable() {
-                                public void run() {
-                                    alertView.showAlert("Search Failed!\n"
-                                        + "You might not be authorized for this action!");    
-                                }
-                            });
-                }
-            }
-        }.start();
-    }
-    
-    
-    
-    public void chooseRating(String rating) {
+    public void updateRating(String rating) {
         int primaryKey = theTables.get(queryIndex).userRating();
         if (primaryKey != -1) {
             new Thread() {
                 public void run() {
                     try {
-                        theQueries.get(queryIndex).updateRating(primaryKey, rating);
+                        relationalDB.updateRating(lastSearchFor, primaryKey, rating);
                         Platform.runLater(
                                 new Runnable() {
                                     public void run() {
                                         //UPDATE VIEW
-                                        search2(lastSearchBy, lastSearchWord);
+                                        updateView();
                                     }
                                 });
                     } catch (SQLException ex) {
@@ -259,32 +193,6 @@ public class Controller {
                 }
             }.start();
         }
-    }
-    
-    public void insertNewItem(String title, String genre, String ratingAM, Date rDate, String name, String ratingAD, String nationality) {
-        new Thread() {
-            public void run() {
-                try {
-                    theInserts.get(insertIndex).addNew(title, genre, ratingAM, rDate, name, ratingAD, nationality);
-                    Platform.runLater(
-                            new Runnable() {
-                                public void run() {
-                                    //UPDATE VIEW
-                                    search2(lastSearchBy, lastSearchWord);
-                                }
-                            });
-                } catch (SQLException ex) {
-                    // SHOW ALERT MESSAGE
-                    Platform.runLater(
-                            new Runnable() {
-                                public void run() {
-                                    alertView.showAlert("Insert Failed!\n"
-                                        + "You might not be authorized for this action!");
-                                }
-                            });
-                }
-            }
-        }.start();
     }
     
     public void exitProgram() {

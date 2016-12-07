@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  *
  * @author fauzianordlund
  */
-public class AddNewUser implements InsertGenerator{
+public class AddNewUser {
     private Connection con;
     private Statement sm;
     private PreparedStatement searchForUser;
@@ -24,11 +24,8 @@ public class AddNewUser implements InsertGenerator{
     private int artistPKEY;
     private String name;
     private String pass;
-<<<<<<< HEAD
     private Connector model;
-=======
  
->>>>>>> b84a855aebd4dd89294567e7cdbea3fcbbe844b8
     private String test;
     public AddNewUser(String name, String pass,Connection con) throws SQLException{
        // initPreparedStatements();
@@ -66,7 +63,6 @@ public class AddNewUser implements InsertGenerator{
     }
    
     
-    @Override
     public void addNew(String title, String genre, String ratingAM, Date rDate, String name, String ratingAD, String nationality) throws SQLException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

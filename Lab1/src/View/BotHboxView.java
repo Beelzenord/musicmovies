@@ -73,18 +73,16 @@ public class BotHboxView extends HBox{
     
     private void addHandlers() {
         addAlbumArtist.setOnAction((ActionEvent event) -> {
-            controller.setIndexMov(0);
             controller.addNewAlbArt();
         });
         
         addMovieDirector.setOnAction((ActionEvent event) -> {
-            controller.setIndexMov(1);
             controller.addNewMovDir();
         });
         
         rate.setOnAction((ActionEvent event) -> {
             String rating = getChooseRating();
-            controller.chooseRating(rating);
+            controller.updateRating(rating);
         });
     }
     

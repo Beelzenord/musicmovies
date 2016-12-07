@@ -33,22 +33,17 @@ public class Connector {
     private boolean getInside() throws SQLException{
         try{
             myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/kTunes?useSSL=false", user, pass);
-            System.out.println("V has come to");
             
-            myStmt = myConn.createStatement();
+            /*myStmt = myConn.createStatement();
             String sql;
             sql=  "SHOW TABLES";
             myRs = myStmt.executeQuery(sql);
-            
             myRs.close();
-            myStmt.close();
-            //myConn.close();
+            myStmt.close();*/
         }
         finally{
             if(myConn!=null) {
-                //myConn.close();
                 return true;
-                //System.out.println("Connection closed");
             }
             else
                 return false;

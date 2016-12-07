@@ -25,6 +25,7 @@ public class RelationalDatabase implements AllQueries{
     private PreparedStatement insertEntertainerPrep;
     private PreparedStatement insertNewDirectoryPrep;
     private PreparedStatement skipDuplicatesPrep;
+    private PreparedStatement updateRatingPrep;
     
     private int mediaPKEY;
     private int entertainerPKEY;
@@ -302,7 +303,8 @@ public class RelationalDatabase implements AllQueries{
         skipDuplicatesPrep = con.prepareStatement(skipDuplicates);
     }
     
-    private int skipDuplicates(String determ, String name, String rating, String nationality) throws SQLException {
+    @Override
+    public int skipDuplicates(String determ, String name, String rating, String nationality) throws SQLException {
         ResultSet rs = null;
         int pKey = -1;
         try {
@@ -322,6 +324,26 @@ public class RelationalDatabase implements AllQueries{
                 skipDuplicatesPrep.close();
         }
     }
+    
+    private void createUpdateRatingPrep(String item) throws SQLException {
+        String updateRating = "UPDATE T_" + item + " SET rating = ? "
+                + "WHERE " + item + "Id = ?";
+        updateRatingPrep = con.prepareStatement(updateRating);
+    }
+    
+    @Override
+    public void updateRating(String item, int primaryKey, String rating) throws SQLException {
+        try {
+            createUpdateRatingPrep(item);
+            updateRatingPrep.setString(1, rating);
+            updateRatingPrep.setInt(2, primaryKey);
+            updateRatingPrep.executeUpdate();
+        } finally {
+            if (updateRatingPrep != null)
+                updateRatingPrep.close();
+        }
+    }
+    
 
     
 }
