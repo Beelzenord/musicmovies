@@ -6,8 +6,8 @@
 package View;
 
 import Model.Album;
-import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
@@ -63,7 +63,7 @@ public class AlbumTableView extends TableView implements AllTableViews{
     }
     
     @Override
-    public int userRating() {
+    public String userRating() {
         ObservableList<Album> selected;
 
         selected = this.getSelectionModel().getSelectedItems();
@@ -72,6 +72,6 @@ public class AlbumTableView extends TableView implements AllTableViews{
             tmp.add(b);
             return tmp.get(0).getAlbumId();
         }
-        return -1;
+        return "-1";
     }
 }

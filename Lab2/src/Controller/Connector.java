@@ -2,6 +2,8 @@
 
 package Controller;
 
+import com.mongodb.DB;
+import com.mongodb.MongoClient;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -13,12 +15,30 @@ import java.sql.Statement;
  * @author fauzianordlund
  */
 public class Connector {
-        Connection myConn = null;
-        Statement myStmt = null;
-        ResultSet myRs = null;
-        String user;
-        String pass;
-        public Connector(){
+        private Connection myConn = null;
+        private Statement myStmt = null;
+        private ResultSet myRs = null;
+        private String user;
+        private String pass;
+        private MongoClient mongoClient;
+        private DB db;
+        
+    public Connector(){
+        
+    }
+    
+    public boolean getInsideMongo() {
+        mongoClient = new MongoClient( "localhost" , 27017 );
+        
+        db = mongoClient.getDB( "test" );
+        if (db != null)
+            return true;
+        else
+            return false;
+    }
+    
+    public DB getMongoDB() {
+        return db;
     }
     
     public boolean validateUserIdentity(String userName, String passWord) throws SQLException{
@@ -34,12 +54,6 @@ public class Connector {
         try{
             myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/kTunes?useSSL=false", user, pass);
             
-            /*myStmt = myConn.createStatement();
-            String sql;
-            sql=  "SHOW TABLES";
-            myRs = myStmt.executeQuery(sql);
-            myRs.close();
-            myStmt.close();*/
         }
         finally{
             if(myConn!=null) {

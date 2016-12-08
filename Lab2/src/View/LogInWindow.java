@@ -41,10 +41,12 @@ public class LogInWindow {
     private Button newProfileButton;
     private String Uname;
     private String Pass;
-    public LogInWindow(){
+    
+    public LogInWindow() {
         initLoginWindow();
     }
-    private void initLoginWindow(){
+    
+    private void initLoginWindow() {
 // newProfileButton();
         grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -67,33 +69,47 @@ public class LogInWindow {
         grid.add(pwBox, 1, 2);
         
         Button btn2 = new Button("Sign in");
+        Button mongo = new Button("Mongo Button");
         btn2.prefWidth(40);
         HBox hbBtn = new HBox(10);
         HBox signBtn = new HBox(10);
+        HBox mongoBox = new HBox(10);
+        mongo.prefWidth(40); 
         hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
         signBtn.setAlignment(Pos.BOTTOM_LEFT);
+        mongoBox.setAlignment(Pos.BOTTOM_LEFT);
+        
+        
         newProfileButton = new Button("Create New Profile");
         hbBtn.getChildren().addAll(newProfileButton);
+        mongoBox.getChildren().addAll(mongo);
         signBtn.getChildren().addAll(btn2);
         //newProfileButton();
         grid.add(hbBtn, 1, 4);
         grid.add(signBtn, 0, 4);
-        btn2.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-              //  System.out.print(theUserName.getText());
-                String username = theUserName.getText();
-                String password = "";
-                password += pwBox.getText();
-                try {
-                    cont.transfer(username, password);
-                    cont.initViews();
-                } catch (SQLException ex) {
-                    Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+        grid.add(mongoBox, 0, 5);
+        btn2.setOnAction((event) -> {
+            //  System.out.print(theUserName.getText());
+              String username = theUserName.getText();
+              String password = "";
+              password += pwBox.getText();
+              try {
+                  cont.transfer(username, password);
+                  cont.initViews();
+              }  catch (Exception ex) {
+              }
         });
-         scene2 = new Scene(grid, 250, 250);   
+        
+        mongo.setOnAction((event) -> {
+            try {
+                cont.mongoInit();
+                cont.initViews();
+            } catch (Exception ex) {
+            }
+            System.out.println("testest");
+        });
+        
+        scene2 = new Scene(grid, 250, 250);   
         stage2 = new Stage();
         stage2.setTitle("Log in Screen");
         stage2.setScene(scene2);

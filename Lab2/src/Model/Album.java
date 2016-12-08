@@ -5,15 +5,15 @@
  */
 package Model;
 
-import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  *
  * @author Niklas
  */
 public class Album {
-    private int albumId;
+    private String albumId;
     private String title;
     private String genre;
     private String rating;
@@ -21,6 +21,14 @@ public class Album {
     private String artist;
     
     public Album(int albumId, String title, String genre, String rating, Date releaseDate, String artist) {
+        this.albumId = String.valueOf(albumId);
+        this.title = title;
+        this.genre = genre;
+        this.rating = rating;
+        this.releaseDate = releaseDate;
+        this.artist = artist;
+    }
+    public Album(String albumId, String title, String genre, String rating, Date releaseDate, String artist) {
         this.albumId = albumId;
         this.title = title;
         this.genre = genre;
@@ -28,18 +36,12 @@ public class Album {
         this.releaseDate = releaseDate;
         this.artist = artist;
     }
-    public Album(String title, String genre, String rating, Date releaseDate) {
-        this.title = title;
-        this.genre = genre;
-        this.rating = rating;
-        this.releaseDate = releaseDate;
-    }
 
-    public int getAlbumId() {
+    public String getAlbumId() {
         return albumId;
     }
 
-    public void setAlbumId(int albumId) {
+    public void setAlbumId(String albumId) {
         this.albumId = albumId;
     }
 
@@ -78,13 +80,11 @@ public class Album {
     public String getArtist() {
         return artist;
     }
-    
-
 
     @Override
     public String toString() {
-        return "Album{" + "title=" + title + ", genre=" + genre 
-            + ", rating=" + rating + ", releaseDate=" + releaseDate + '}';
+        return "Album{" + "title=" + title + ", genre=" + genre + ", rating=" 
+                + rating + ", releaseDate=" + releaseDate + ", artist=" + artist + '}';
     }
     
 }

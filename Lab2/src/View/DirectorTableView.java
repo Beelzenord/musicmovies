@@ -24,7 +24,7 @@ public class DirectorTableView extends TableView implements AllTableViews {
     private TableColumn movie;
 
     public DirectorTableView() {
-        initView();
+        //initView();
     }
     
     private void initView() {
@@ -57,7 +57,7 @@ public class DirectorTableView extends TableView implements AllTableViews {
     }
     
     @Override
-    public int userRating() {
+    public String userRating() {
         ObservableList<Director> selectedAritst;
 
         selectedAritst = this.getSelectionModel().getSelectedItems();

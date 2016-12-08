@@ -26,7 +26,7 @@ public class MovieTableView extends TableView implements AllTableViews{
     private TableColumn directors;
 
     public MovieTableView() {
-        initView();
+       // initView();
     }
     
     private void initView() {
@@ -63,7 +63,7 @@ public class MovieTableView extends TableView implements AllTableViews{
     }
     
     @Override
-    public int userRating() {
+    public String userRating() {
         ObservableList<Movie> selected;
 
         selected = this.getSelectionModel().getSelectedItems();

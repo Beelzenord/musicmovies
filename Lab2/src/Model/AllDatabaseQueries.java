@@ -5,9 +5,8 @@
  */
 package Model;
 
-import java.sql.Date;
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  *
@@ -23,7 +22,7 @@ public interface AllDatabaseQueries<E> {
      * @return An ArrayList of albums or movies. 
      * @throws SQLException 
      */
-    public ArrayList<E> getMedia(String media, String searchBy, String searchWord) throws SQLException;
+    public ArrayList<E> getMedia(String media, String searchBy, String searchWord) throws Exception;
     
     /**
      * 
@@ -33,7 +32,7 @@ public interface AllDatabaseQueries<E> {
      * @return An ArrayList of artists or directors. 
      * @throws SQLException 
      */
-    public ArrayList<E> getEntertainer(String entertainer, String searchBy, String searchWord) throws SQLException;
+    public ArrayList<E> getEntertainer(String entertainer, String searchBy, String searchWord) throws Exception;
     
     /**
      * 
@@ -42,7 +41,7 @@ public interface AllDatabaseQueries<E> {
      * @param ratingAD The rating of the entertainer.
      * @throws SQLException 
      */
-    public void addNewItem(String determ, String title, String genre, String ratingAM, Date rDate, String name, String ratingAD, String nationality) throws SQLException;
+    public void addNewItem(String determ, String title, String genre, String ratingAM, Date rDate, String name, String ratingAD, String nationality) throws Exception;
     
     /**
      * 
@@ -50,7 +49,7 @@ public interface AllDatabaseQueries<E> {
      * @return The primary key if the entertainer already exists, else -1.
      * @throws SQLException 
      */
-    public int skipDuplicates(String determ, String name, String rating, String nationality) throws SQLException;
+    public int skipDuplicates(String determ, String name, String rating, String nationality) throws Exception;
     
     /**
      * 
@@ -59,5 +58,5 @@ public interface AllDatabaseQueries<E> {
      * @param rating The new rating. 
      * @throws SQLException 
      */
-    public void updateRating(String item, int primaryKey, String rating) throws SQLException;
+    public void updateRating(String item, String primaryKey, String rating) throws Exception;
 }

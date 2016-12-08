@@ -6,12 +6,12 @@
 package Model;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  *
@@ -231,11 +231,11 @@ public class RelationalDatabase implements AllDatabaseQueries{
                 ResultSet rs = null;
                 try {
                     createInsertMediaPrep(determ);
-                    
+                    java.sql.Date sqlDate = (java.sql.Date) rDate;
                     insertMediaPrep.setString(1, title);
                     insertMediaPrep.setString(2, genre);
                     insertMediaPrep.setString(3, ratingAM);
-                    insertMediaPrep.setDate(4, rDate);
+                    insertMediaPrep.setDate(4, sqlDate);
                     insertMediaPrep.executeUpdate();
                     rs = insertMediaPrep.getGeneratedKeys();
                     while (rs.next())
@@ -332,11 +332,12 @@ public class RelationalDatabase implements AllDatabaseQueries{
     }
     
     @Override
-    public void updateRating(String item, int primaryKey, String rating) throws SQLException {
+    public void updateRating(String item, String primaryKey, String rating) throws SQLException {
         try {
+            int pKey = Integer.valueOf(primaryKey);
             createUpdateRatingPrep(item);
             updateRatingPrep.setString(1, rating);
-            updateRatingPrep.setInt(2, primaryKey);
+            updateRatingPrep.setInt(2, pKey);
             updateRatingPrep.executeUpdate();
         } finally {
             if (updateRatingPrep != null)

@@ -13,5 +13,5 @@ import java.util.ArrayList;
  */
 public interface AllTableViews {
     public void showTable(ArrayList<? extends Object> theResult);
-    public int userRating();
+    public String userRating();
 }

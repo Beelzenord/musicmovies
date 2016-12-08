@@ -24,7 +24,7 @@ public class ArtistTableView extends TableView implements AllTableViews {
     private TableColumn album;
 
     public ArtistTableView() {
-        initView();
+        //initView();
     }
     
     private void initView() {
@@ -57,7 +57,7 @@ public class ArtistTableView extends TableView implements AllTableViews {
     }
     
     @Override
-    public int userRating() {
+    public String userRating() {
         ObservableList<Artist> selectedAritst;
 
         selectedAritst = this.getSelectionModel().getSelectedItems();
@@ -66,7 +66,7 @@ public class ArtistTableView extends TableView implements AllTableViews {
             tmp.add(b);
             return tmp.get(0).getArtistId();
         }
-        return -1;
+        return "-1";
     }
     
 }

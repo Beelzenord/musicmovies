@@ -12,11 +12,11 @@ import View.AlertView;
 import View.AllTableViews;
 import View.View;
 import java.sql.Date;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Platform;
 import Model.AllDatabaseQueries;
+import Model.MongoDatabase;
 
 /**
  *
@@ -25,6 +25,9 @@ import Model.AllDatabaseQueries;
 public class Controller {
     private ArrayList<AllTableViews> theTables;
     private AllDatabaseQueries relationalDB;
+    private AllDatabaseQueries mongoDB;
+    private AllDatabaseQueries database;
+    private ArrayList<AllDatabaseQueries> databases;
     private AddNewAlbArtView addNewAlbArtView;
     private AddNewMovDirView addNewMovDirView;
     private AlertView alertView;
@@ -43,13 +46,21 @@ public class Controller {
         lastSearchFor = "album";
         lastSearchBy = "album";
         lastSearchWord = "title";
+        databases = new ArrayList();
         this.model = model;
         this.view = view;
         view.ControllerHook(this);
     }
     
-    public void systemAccess() throws SQLException {
+    public void systemAccess() throws Exception {
         relationalDB = new RelationalDatabase(model.getMyConn());
+        databases.add(new RelationalDatabase(model.getMyConn()));
+        database = new RelationalDatabase(model.getMyConn());
+    }
+    
+    public void mongoAccess() {
+        mongoDB = new MongoDatabase(model.getMongoDB());
+        database = new MongoDatabase(model.getMongoDB());
     }
     
     public void connectViews(AllTableViews altw, AllTableViews artw, AllTableViews motw, AllTableViews ditw) {
@@ -59,10 +70,15 @@ public class Controller {
         theTables.add(ditw);
     }
     
-    public void transfer(String userName, String passWord) throws SQLException{
+    public void transfer(String userName, String passWord) throws Exception{
         if (model.validateUserIdentity(userName,passWord)) {
             systemAccess();
         }
+    }
+    
+    public void mongoInit() throws Exception {
+        model.getInsideMongo();
+        mongoAccess();
     }
     
     public void initViews() {
@@ -87,7 +103,7 @@ public class Controller {
         new Thread() {
             public void run() {
                 try {
-                    ArrayList tmp = relationalDB.getMedia(searchFor, searchBy, searchWord);
+                    ArrayList tmp = database.getMedia(searchFor, searchBy, searchWord);
                     Platform.runLater(
                             new Runnable() {
                                 public void run() {
@@ -96,7 +112,7 @@ public class Controller {
                                     view.changeScene(queryIndex);
                                 }
                             });
-                } catch (SQLException ex) {
+                } catch (Exception ex) {
                     // SHOW ALERT MESSAGE
                     Platform.runLater(
                             new Runnable() {
@@ -117,7 +133,7 @@ public class Controller {
         new Thread() {
             public void run() {
                 try {
-                    ArrayList tmp = relationalDB.getEntertainer(searchFor, searchBy, searchWord);
+                    ArrayList tmp = database.getEntertainer(searchFor, searchBy, searchWord);
                     Platform.runLater(
                             new Runnable() {
                                 public void run() {
@@ -126,7 +142,7 @@ public class Controller {
                                     view.changeScene(queryIndex);
                                 }
                             });
-                } catch (SQLException ex) {
+                } catch (Exception ex) {
                     // SHOW ALERT MESSAGE
                     Platform.runLater(
                             new Runnable() {
@@ -144,7 +160,7 @@ public class Controller {
         new Thread() {
             public void run() {
                 try {
-                    relationalDB.addNewItem(determ, title, genre, ratingAM, rDate, name, ratingAD, nationality);
+                    database.addNewItem(determ, title, genre, ratingAM, rDate, name, ratingAD, nationality);
                     Platform.runLater(
                             new Runnable() {
                                 public void run() {
@@ -152,7 +168,7 @@ public class Controller {
                                     updateView();
                                 }
                             });
-                } catch (SQLException ex) {
+                } catch (Exception ex) {
                     // SHOW ALERT MESSAGE
                     Platform.runLater(
                             new Runnable() {
@@ -167,12 +183,12 @@ public class Controller {
     }
     
     public void updateRating(String rating) {
-        int primaryKey = theTables.get(queryIndex).userRating();
-        if (primaryKey != -1) {
+        String primaryKey = theTables.get(queryIndex).userRating();
+        if (primaryKey != "-1") {
             new Thread() {
                 public void run() {
                     try {
-                        relationalDB.updateRating(lastSearchFor, primaryKey, rating);
+                        database.updateRating(lastSearchFor, primaryKey, rating);
                         Platform.runLater(
                                 new Runnable() {
                                     public void run() {
@@ -180,7 +196,7 @@ public class Controller {
                                         updateView();
                                     }
                                 });
-                    } catch (SQLException ex) {
+                    } catch (Exception ex) {
                         // SHOW ALERT MESSAGE
                         Platform.runLater(
                                 new Runnable() {
@@ -199,7 +215,7 @@ public class Controller {
         try {
             model.exitSafetly();
             view.fullyQuit();
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             alertView.showAlert("Could not close connection!");
         }
     }
