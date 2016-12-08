@@ -1,0 +1,20 @@
+[
+  {
+     "title"  : "thriller",
+	 "genre"  : "pop",
+	 "rating" : "9", 
+	 "releaseDate" : "1982 -05-02"
+  },
+  {
+     "title"  : "The Man Who Sold The World",
+	 "genre"  : "alternate",
+	 "rating" : "9", 
+	 "releaseDate" : "1973 -05-02"
+  },
+  {
+     "title"  : "Diamond Dogs",
+	 "genre"  : "alternate",
+	 "rating" : "9", 
+	 "releaseDate" : "1982 -05-02"
+  }
+]
