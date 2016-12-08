@@ -21,7 +21,5 @@ public interface AllQueries<E> {
     
     public void addNewItem(String determ, String title, String genre, String ratingAM, Date rDate, String name, String ratingAD, String nationality) throws SQLException;
     
-    public int skipDuplicates(String determ, String name, String rating, String nationality) throws SQLException;
-    
     public void updateRating(String item, int primaryKey, String rating) throws SQLException;
 }

@@ -290,41 +290,6 @@ public class RelationalDatabase implements AllQueries{
         }
     }
     
-    private void createSkipDuplicatesPrep(String determ) throws SQLException {
-        String skipDuplicates = "";
-        if (determ.equals("album")) {
-            skipDuplicates = "SELECT artistId FROM T_Artist WHERE name = ? "
-                + "AND rating = ? AND nationality = ?";
-        }
-        else {
-            skipDuplicates = "SELECT directorId FROM T_Director WHERE name = ? "
-                + "AND rating = ? AND nationality = ?";
-        }
-        skipDuplicatesPrep = con.prepareStatement(skipDuplicates);
-    }
-    
-    @Override
-    public int skipDuplicates(String determ, String name, String rating, String nationality) throws SQLException {
-        ResultSet rs = null;
-        int pKey = -1;
-        try {
-            createSkipDuplicatesPrep(determ);
-            skipDuplicatesPrep.setString(1, name);
-            skipDuplicatesPrep.setString(2, rating);
-            skipDuplicatesPrep.setString(3, nationality);
-            rs = skipDuplicatesPrep.executeQuery();
-            while (rs.next()) {
-                pKey = rs.getInt(1);
-            }
-            return pKey;
-        } finally {
-            if (rs != null)
-                rs.close();
-            if (skipDuplicatesPrep != null)
-                skipDuplicatesPrep.close();
-        }
-    }
-    
     private void createUpdateRatingPrep(String item) throws SQLException {
         String updateRating = "UPDATE T_" + item + " SET rating = ? "
                 + "WHERE " + item + "Id = ?";
@@ -344,6 +309,38 @@ public class RelationalDatabase implements AllQueries{
         }
     }
     
-
+    private void createSkipDuplicatesPrep(String determ) throws SQLException {
+        String skipDuplicates = "";
+        if (determ.equals("album")) {
+            skipDuplicates = "SELECT artistId FROM T_Artist WHERE name = ? "
+                + "AND rating = ? AND nationality = ?";
+        }
+        else {
+            skipDuplicates = "SELECT directorId FROM T_Director WHERE name = ? "
+                + "AND rating = ? AND nationality = ?";
+        }
+        skipDuplicatesPrep = con.prepareStatement(skipDuplicates);
+    }
+    
+    private int skipDuplicates(String determ, String name, String rating, String nationality) throws SQLException {
+        ResultSet rs = null;
+        int pKey = -1;
+        try {
+            createSkipDuplicatesPrep(determ);
+            skipDuplicatesPrep.setString(1, name);
+            skipDuplicatesPrep.setString(2, rating);
+            skipDuplicatesPrep.setString(3, nationality);
+            rs = skipDuplicatesPrep.executeQuery();
+            while (rs.next()) {
+                pKey = rs.getInt(1);
+            }
+            return pKey;
+        } finally {
+            if (rs != null)
+                rs.close();
+            if (skipDuplicatesPrep != null)
+                skipDuplicatesPrep.close();
+        }
+    }
     
 }
