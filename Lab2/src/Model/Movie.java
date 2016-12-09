@@ -13,7 +13,7 @@ import java.util.Date;
  * @author Niklas
  */
 public class Movie {
-    private int movieId;
+    private String movieId;
     private String title;
     private String genre;
     private String rating;
@@ -21,6 +21,14 @@ public class Movie {
     private String director;
     
     public Movie(int movieId, String title, String genre, String rating, Date releaseDate, String director) {
+        this.movieId = String.valueOf(movieId);
+        this.title = title;
+        this.genre = genre;
+        this.rating = rating;
+        this.releaseDate = releaseDate;
+        this.director = director;
+    }
+    public Movie(String movieId, String title, String genre, String rating, Date releaseDate, String director) {
         this.movieId = movieId;
         this.title = title;
         this.genre = genre;
@@ -28,18 +36,12 @@ public class Movie {
         this.releaseDate = releaseDate;
         this.director = director;
     }
-    public Movie(String title, String genre, String rating, Date releaseDate) {
-        this.title = title;
-        this.genre = genre;
-        this.rating = rating;
-        this.releaseDate = releaseDate;
-    }
 
-    public int getMovieId() {
+    public String getMovieId() {
         return movieId;
     }
 
-    public void setMovieId(int movieId) {
+    public void setMovieId(String movieId) {
         this.movieId = movieId;
     }
 
@@ -74,17 +76,19 @@ public class Movie {
     public void setReleaseDate(Date releaseDate) {
         this.releaseDate = releaseDate;
     }
+    
+    public void setDirector(String director) {
+        this.director = director;
+    }
 
     public String getDirector() {
         return director;
     }
-    
-
 
     @Override
     public String toString() {
-        return "Movie{" + "title=" + title + ", genre=" + genre 
-            + ", rating=" + rating + ", releaseDate=" + releaseDate + '}';
+        return "Movie{" + "title=" + title + ", genre=" + genre + ", rating=" 
+                + rating + ", releaseDate=" + releaseDate + ", director=" + director + '}';
     }
     
 }

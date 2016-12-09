@@ -24,7 +24,7 @@ public class DirectorTableView extends TableView implements AllTableViews {
     private TableColumn movie;
 
     public DirectorTableView() {
-        //initView();
+        initView();
     }
     
     private void initView() {
@@ -66,6 +66,6 @@ public class DirectorTableView extends TableView implements AllTableViews {
             tmp.add(b);
             return tmp.get(0).getDirectorId();
         }
-        return -1;
+        return "-1";
     }
 }

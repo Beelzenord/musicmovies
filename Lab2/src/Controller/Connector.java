@@ -1,9 +1,7 @@
-//<<<<<<< Updated upstream:Lab1/src/Controller/Connector.java
-
 package Controller;
 
-import com.mongodb.DB;
 import com.mongodb.MongoClient;
+import com.mongodb.client.MongoDatabase;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -21,7 +19,7 @@ public class Connector {
         private String user;
         private String pass;
         private MongoClient mongoClient;
-        private DB db;
+        private MongoDatabase mdb;
         
     public Connector(){
         
@@ -30,15 +28,15 @@ public class Connector {
     public boolean getInsideMongo() {
         mongoClient = new MongoClient( "localhost" , 27017 );
         
-        db = mongoClient.getDB( "test" );
-        if (db != null)
+        mdb = mongoClient.getDatabase("test");
+        if (mdb != null)
             return true;
         else
             return false;
     }
     
-    public DB getMongoDB() {
-        return db;
+    public MongoDatabase getMongoDB() {
+        return mdb;
     }
     
     public boolean validateUserIdentity(String userName, String passWord) throws SQLException{

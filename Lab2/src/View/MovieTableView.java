@@ -26,7 +26,7 @@ public class MovieTableView extends TableView implements AllTableViews{
     private TableColumn directors;
 
     public MovieTableView() {
-       // initView();
+        initView();
     }
     
     private void initView() {
@@ -72,6 +72,6 @@ public class MovieTableView extends TableView implements AllTableViews{
             tmp.add(b);
             return tmp.get(0).getMovieId();
         }
-        return -1;
+        return "-1";
     }
 }

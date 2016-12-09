@@ -76,6 +76,10 @@ public class Album {
     public void setReleaseDate(Date releaseDate) {
         this.releaseDate = releaseDate;
     }
+    
+    public void setArtist(String artist) {
+        this.artist = artist;
+    }
 
     public String getArtist() {
         return artist;

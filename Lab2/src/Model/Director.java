@@ -11,14 +11,22 @@ package Model;
  * @author Niklas
  */
 public class Director {
-    private int directorId;
+    private String directorId;
     private String name;
     private String rating;
     private String nationality;
     private String movie;
     
     
-    public Director(int directorId, String name, String rating, String nationality, String movie) { //
+    public Director(int directorId, String name, String rating, String nationality, String movie) { 
+        this.directorId = String.valueOf(directorId);
+        this.name = name;
+        this.rating = rating;
+        this.nationality = nationality;
+        this.movie = movie;
+    }
+
+    public Director(String directorId, String name, String rating, String nationality, String movie) { 
         this.directorId = directorId;
         this.name = name;
         this.rating = rating;
@@ -26,14 +34,15 @@ public class Director {
         this.movie = movie;
     }
 
-    public int getDirectorId() {
+    public String getDirectorId() {
         return directorId;
     }
 
-    public void setDirectorId(int directorId) {
+    public void setDirectorId(String directorId) {
         this.directorId = directorId;
     }
 
+    
     public String getName() {
         return name;
     }
@@ -57,15 +66,19 @@ public class Director {
     public void setNationality(String nationality) {
         this.nationality = nationality;
     }
-    
+
     public String getMovie() {
         return movie;
     }
 
+    public void setMovie(String movie) {
+        this.movie = movie;
+    }
+
     @Override
     public String toString() {
-        return "Director{" + "name=" + name + ", rating=" + rating + ", nationality=" + nationality + '}';
+        return "Director{" + "name=" + name + ", rating=" + rating + ", nationality=" + nationality + ", movie=" + movie + '}';
     }
-    
+
     
 }

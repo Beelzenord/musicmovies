@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Platform;
 import Model.AllDatabaseQueries;
-import Model.MongoDatabase;
+import Model.MongoDBDatabase;
 
 /**
  *
@@ -59,8 +59,8 @@ public class Controller {
     }
     
     public void mongoAccess() {
-        mongoDB = new MongoDatabase(model.getMongoDB());
-        database = new MongoDatabase(model.getMongoDB());
+        mongoDB = new MongoDBDatabase(model.getMongoDB());
+        database = new MongoDBDatabase(model.getMongoDB());
     }
     
     public void connectViews(AllTableViews altw, AllTableViews artw, AllTableViews motw, AllTableViews ditw) {

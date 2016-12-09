@@ -11,7 +11,7 @@ package Model;
  * @author Niklas
  */
 public class Artist {
-    private int artistId;
+    private String artistId;
     private String name;
     private String rating;
     private String nationality;
@@ -19,6 +19,14 @@ public class Artist {
     
     
     public Artist(int artistId, String name, String rating, String nationality, String album) { 
+        this.artistId = String.valueOf(artistId);
+        this.name = name;
+        this.rating = rating;
+        this.nationality = nationality;
+        this.album = album;
+    }
+
+    public Artist(String artistId, String name, String rating, String nationality, String album) { 
         this.artistId = artistId;
         this.name = name;
         this.rating = rating;
@@ -26,14 +34,15 @@ public class Artist {
         this.album = album;
     }
 
-    public int getArtistId() {
+    public String getArtistId() {
         return artistId;
     }
 
-    public void setArtistId(int artistId) {
+    public void setArtistId(String artistId) {
         this.artistId = artistId;
     }
 
+    
     public String getName() {
         return name;
     }
@@ -57,14 +66,18 @@ public class Artist {
     public void setNationality(String nationality) {
         this.nationality = nationality;
     }
-    
+
     public String getAlbum() {
         return album;
     }
 
+    public void setAlbum(String album) {
+        this.album = album;
+    }
+
     @Override
     public String toString() {
-        return "Artist{" + "name=" + name + ", rating=" + rating + ", nationality=" + nationality + '}';
+        return "Artist{" + "name=" + name + ", rating=" + rating + ", nationality=" + nationality + ", album=" + album + '}';
     }
 
 }

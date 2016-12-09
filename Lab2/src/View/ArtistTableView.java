@@ -24,7 +24,7 @@ public class ArtistTableView extends TableView implements AllTableViews {
     private TableColumn album;
 
     public ArtistTableView() {
-        //initView();
+        initView();
     }
     
     private void initView() {
