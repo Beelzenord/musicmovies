@@ -5,7 +5,6 @@
 */
 package Model;
 
-import com.mongodb.DB;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
@@ -152,7 +151,7 @@ public class MongoDBDatabase implements AllDatabaseQueries {
     public void addNewItem(String determ, String title, String genre, String ratingAM, Date rDate, String name, String ratingAD, String nationality) throws Exception {
         Document insertMedia = createInsertMedia(determ, title, genre, ratingAM, rDate, name);
         coll.insertOne(insertMedia);
-        
+
         Document insertEntertainer = createInsertEntertainer(determ, name, ratingAD, nationality, title);
         coll.insertOne(insertEntertainer);
     }
@@ -162,17 +161,18 @@ public class MongoDBDatabase implements AllDatabaseQueries {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    private Document createUpdateItem(String item, String primaryKey, String rating) {
-       /*coll = db.getCollection(item);
-        Document updateItem = new Document(primaryKey, ));
-        Document query = new Document(searchBy, new Document("$regex", ".*" + searchWord + ".*"));
-        return updateItem;*/
-       return null;
+    private Document createUpdateKey(String item, String primaryKey) {
+        coll = mdb.getCollection(item);
+        ObjectId oid = new ObjectId(primaryKey);
+        Document query = new Document("_id", oid);
+        return query;
     }
     
     @Override
     public void updateRating(String item, String primaryKey, String rating) throws Exception {
-
+        Document updateKey = createUpdateKey(item, primaryKey);
+        Document newRating = new Document("$set", new Document("rating", rating));
+        coll.updateOne(updateKey, newRating);
     }
     
 }
