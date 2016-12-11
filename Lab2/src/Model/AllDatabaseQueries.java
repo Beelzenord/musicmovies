@@ -49,7 +49,7 @@ public interface AllDatabaseQueries<E> {
      * @return The primary key if the entertainer already exists, else -1.
      * @throws SQLException 
      */
-    public int skipDuplicates(String determ, String name, String rating, String nationality) throws Exception;
+    public String skipDuplicates(String determ, String name, String rating, String nationality) throws Exception;
     
     /**
      * 

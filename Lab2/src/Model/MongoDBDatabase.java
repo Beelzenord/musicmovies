@@ -88,14 +88,20 @@ public class MongoDBDatabase implements AllDatabaseQueries {
                 String name = (String)doc.get("name");
                 String rating = (String)doc.get("rating");
                 String nationality = (String)doc.get("nationality");
-                String media = "";
+                ArrayList<Document> media;
                 if (entertainer.equals("artist")) {
-                    media = (String)doc.get("album");
-                    tmp.add(new Artist(sid, name, rating, nationality, media));
+                    media = (ArrayList<Document>)doc.get("albums");
+                    for (Document d : media) {
+                        String album = d.getString("album");
+                        tmp.add(new Artist(sid, name, rating, nationality, album));
+                    }
                 }
                 else {
-                    media = (String)doc.get("movie");
-                    tmp.add(new Director(sid, name, rating, nationality, media));
+                    media = (ArrayList<Document>)doc.get("movies");
+                    for (Document d : media) {
+                        String movie = d.getString("movie");
+                        tmp.add(new Artist(sid, name, rating, nationality, movie));
+                    }
                 }
             }
             return tmp;
@@ -105,8 +111,7 @@ public class MongoDBDatabase implements AllDatabaseQueries {
                 cursor.close();
         }
     }
-    
-    
+
     
     private Document createInsertMedia(String determ, String title, String genre, String rating, Date rDate, String entertainer) {
         coll = mdb.getCollection(determ);
@@ -128,23 +133,54 @@ public class MongoDBDatabase implements AllDatabaseQueries {
         return insertMedia;
     }
     
-    private Document createInsertEntertainer(String determ, String name, String rating, String nationality, String title) {
+    private Document createInsertNewEntertainer(String determ, String name, String rating, String nationality, String title) {
         Document insertEntertainer;
+        ArrayList<Document> list = new ArrayList();
         if (determ.equals("album")) {
             coll = mdb.getCollection("artist");
+            list.add(new Document("album", title));
             insertEntertainer = new Document("name", name).
                     append("rating", rating).
                     append("nationality", nationality).
-                    append("album", title);
+                    append("albums", list);
         }
         else {
             coll = mdb.getCollection("director");
+            list.add(new Document("movie", title));
             insertEntertainer = new Document("name", name).
                     append("rating", rating).
                     append("nationality", nationality).
-                    append("movie", title);
+                    append("movies", list);
         }
         return insertEntertainer;
+    }
+    
+    private Document createInsertEntertainer(String pKey, String determ, String title) {
+        Document insertEntertainer;
+        if (determ.equals("album")) {
+            coll = mdb.getCollection("artist");
+            ObjectId oid = new ObjectId(pKey);
+            insertEntertainer = new Document("_id", oid);
+        }
+        else {
+            coll = mdb.getCollection("director");
+            ObjectId oid = new ObjectId(pKey);
+            insertEntertainer = new Document("_id", oid);
+        }
+        return insertEntertainer;
+    }
+    
+    private Document createInsertMediaToEntertainer(String determ, String title) {
+        Document insertEntertainer;
+        if (determ.equals("album")) {
+            coll = mdb.getCollection("artist");
+            insertEntertainer = new Document("$push", new Document("albums", new Document("album", title)));
+        }
+        else {
+            coll = mdb.getCollection("director");
+            insertEntertainer = new Document("$push", new Document("movies", new Document("movie", title)));
+        }
+       return insertEntertainer;
     }
     
     @Override
@@ -152,13 +188,59 @@ public class MongoDBDatabase implements AllDatabaseQueries {
         Document insertMedia = createInsertMedia(determ, title, genre, ratingAM, rDate, name);
         coll.insertOne(insertMedia);
 
-        Document insertEntertainer = createInsertEntertainer(determ, name, ratingAD, nationality, title);
-        coll.insertOne(insertEntertainer);
+        // only insert new if entertain doesn't already exists
+        String pKey = skipDuplicates(determ, name, ratingAD, nationality);
+        if (pKey.equals("-1")) {
+            Document insertNewEntertainer = createInsertNewEntertainer(determ, name, ratingAD, nationality, title);
+            coll.insertOne(insertNewEntertainer);
+        }
+        else {
+            Document insertEntertainer = createInsertEntertainer(pKey, determ, title);
+            Document insertMediaToEntertainer = createInsertMediaToEntertainer(determ, title);
+            coll.updateOne(insertEntertainer, insertMediaToEntertainer);
+        }
     }
     
+    
+        private Document createSkipDuplicatesQuery(String determ, String name, String rating, String nationality) {
+            Document query;
+            if (determ.equals("album")) {
+                coll = mdb.getCollection("artist");
+                query = new Document();
+                query.append("name", name).
+                append("rating", rating).
+                append("nationality", nationality);
+            }
+            else {
+                coll = mdb.getCollection("director");
+                query = new Document();
+                query.append("name", name).
+                append("rating", rating).
+                append("nationality", nationality);
+            }
+        return query;
+    }
+    
+    
     @Override
-    public int skipDuplicates(String determ, String name, String rating, String nationality) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String skipDuplicates(String determ, String name, String rating, String nationality) throws Exception {
+        MongoCursor<Document> cursor = null;
+        String tmp = "-1";
+        try {
+            Document query = createSkipDuplicatesQuery(determ, name, rating, nationality);
+            FindIterable find = coll.find(query);
+            cursor = find.iterator();
+            while(cursor.hasNext()) {
+                Document doc = cursor.next();
+                ObjectId id = (ObjectId)doc.get("_id");
+                String sid = id.toHexString();
+                tmp = sid;
+            }
+            return tmp;
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
     }
     
     private Document createUpdateKey(String item, String primaryKey) {

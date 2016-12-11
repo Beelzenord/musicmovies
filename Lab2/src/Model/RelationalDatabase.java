@@ -247,7 +247,7 @@ public class RelationalDatabase implements AllDatabaseQueries{
                         insertMediaPrep.close();
                 }
          
-                entertainerPKEY = skipDuplicates(determ, name, ratingAD, nationality);
+                entertainerPKEY = Integer.valueOf(skipDuplicates(determ, name, ratingAD, nationality));
             if (entertainerPKEY == -1) {
                 try {
                     createInsertEntertainerPrep(determ);
@@ -304,7 +304,7 @@ public class RelationalDatabase implements AllDatabaseQueries{
     }
     
     @Override
-    public int skipDuplicates(String determ, String name, String rating, String nationality) throws SQLException {
+    public String skipDuplicates(String determ, String name, String rating, String nationality) throws SQLException {
         ResultSet rs = null;
         int pKey = -1;
         try {
@@ -316,7 +316,7 @@ public class RelationalDatabase implements AllDatabaseQueries{
             while (rs.next()) {
                 pKey = rs.getInt(1);
             }
-            return pKey;
+            return String.valueOf(pKey);
         } finally {
             if (rs != null)
                 rs.close();
