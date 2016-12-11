@@ -69,7 +69,17 @@ public class MongoDBDatabase implements AllDatabaseQueries {
     
     private Document createEntertainerQuery(String entertainer, String searchBy, String searchWord) {
         coll = mdb.getCollection(entertainer);
-        Document query = new Document(searchBy, new Document("$regex", ".*" + searchWord + ".*"));
+        System.out.println(searchBy);
+        Document query;
+        if (searchBy.equals("album"))
+            query = new Document("albums", new Document("$elemMatch", new Document("album", new Document("$regex", ".*" + searchWord + ".*"))));
+        
+        else if (searchBy.equals("movie"))
+            query = new Document("movies", new Document("$elemMatch", new Document("movie", new Document("$regex", ".*" + searchWord + ".*"))));
+        
+        else 
+            query = new Document(searchBy, new Document("$regex", ".*" + searchWord + ".*"));
+        
         return query;
     }
     
@@ -89,6 +99,7 @@ public class MongoDBDatabase implements AllDatabaseQueries {
                 String rating = (String)doc.get("rating");
                 String nationality = (String)doc.get("nationality");
                 ArrayList<Document> media;
+                
                 if (entertainer.equals("artist")) {
                     media = (ArrayList<Document>)doc.get("albums");
                     for (Document d : media) {
