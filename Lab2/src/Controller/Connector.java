@@ -28,7 +28,7 @@ public class Connector {
     public boolean getInsideMongo() {
         mongoClient = new MongoClient( "localhost" , 27017 );
         
-        mdb = mongoClient.getDatabase("test");
+        mdb = mongoClient.getDatabase("kTunes");
         if (mdb != null)
             return true;
         else
@@ -66,6 +66,9 @@ public class Connector {
        if (myConn != null) {
            myConn.close();
        } 
+       if (mongoClient != null) {
+           mongoClient.close();
+       }
     }
     
     public Connection getMyConn() {

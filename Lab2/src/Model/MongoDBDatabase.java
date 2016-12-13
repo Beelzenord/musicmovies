@@ -69,7 +69,6 @@ public class MongoDBDatabase implements AllDatabaseQueries {
     
     private Document createEntertainerQuery(String entertainer, String searchBy, String searchWord) {
         coll = mdb.getCollection(entertainer);
-        System.out.println(searchBy);
         Document query;
         if (searchBy.equals("album"))
             query = new Document("albums", new Document("$elemMatch", new Document("album", new Document("$regex", ".*" + searchWord + ".*"))));
@@ -111,7 +110,7 @@ public class MongoDBDatabase implements AllDatabaseQueries {
                     media = (ArrayList<Document>)doc.get("movies");
                     for (Document d : media) {
                         String movie = d.getString("movie");
-                        tmp.add(new Artist(sid, name, rating, nationality, movie));
+                        tmp.add(new Director(sid, name, rating, nationality, movie));
                     }
                 }
             }
@@ -199,7 +198,7 @@ public class MongoDBDatabase implements AllDatabaseQueries {
         Document insertMedia = createInsertMedia(determ, title, genre, ratingAM, rDate, name);
         coll.insertOne(insertMedia);
 
-        // only insert new if entertain doesn't already exists
+        // only insert new if entertainer doesn't already exists
         String pKey = skipDuplicates(determ, name, ratingAD, nationality);
         if (pKey.equals("-1")) {
             Document insertNewEntertainer = createInsertNewEntertainer(determ, name, ratingAD, nationality, title);

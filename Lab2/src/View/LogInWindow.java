@@ -106,7 +106,6 @@ public class LogInWindow {
                 cont.initViews();
             } catch (Exception ex) {
             }
-            System.out.println("testest");
         });
         
         scene2 = new Scene(grid, 250, 250);   
